@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.1";
+	private static $version = "0.2";
 
 	// Singleton
 	private static $instance = null;
@@ -160,7 +160,9 @@ class JB_Core
 		{
 			// We're updating the core; jb_update_core is defined in "jones/core/include.php"
 			jb_update_core();
-			return;
+
+			flash_message("Updated", 'success');
+			admin_redirect('index.php?module=config-plugins');
 		}
 
 		$jb_plugins = $cache->read('jb_plugins');
