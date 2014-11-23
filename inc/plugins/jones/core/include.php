@@ -14,6 +14,22 @@ else
 if(JB_CORE_INSTALLED === false && $plugins != null)
 	$plugins->add_hook("admin_config_plugins_plugin_list", "jonescore_notice");
 
+function jb_install_plugin($codename)
+{
+	if(JB_CORE_INSTALLED === false)
+		$installed = jb_install_core();
+
+	// Don't use an else as the function above might change the value
+	if(JB_CORE_INSTALLED === true || $installed === true)
+		JB_Core::i()->install($codename);
+	else
+	{
+		// This message should normally never appear as "jb_install_core" should already throw an error
+		flash_message("Couldn't install", 'error');
+		admin_redirect('index.php?module=config-plugins');
+	}
+}
+
 // Called on installation when the core isn't set up
 function jb_install_core()
 {
