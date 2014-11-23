@@ -15,7 +15,7 @@ class JB_Helpers
 	// Cache our parser class and the options
 	public static function parse($message)
 	{
-   		if(static::$parser == null)
+		if(static::$parser == null)
 		{
 			require_once MYBB_ROOT."inc/class_parser.php";
 			static::$parser = new postParser;
@@ -35,11 +35,11 @@ class JB_Helpers
 	{
 		// Do we still need to parse our message?
 		if($parse)
-		    $message = static::parse($message);
+			$message = static::parse($message);
 
 		// If it's short enough: return it
 		if(strlen($message) <= $length)
-		    return $message;
+			return $message;
 
 		// Shorten the message and append what should be appended
 		return my_substr($message, 0, $length-strlen($append)).$append;
@@ -51,13 +51,13 @@ class JB_Helpers
 		global $lang;
 
 		if(!is_array($user))
-		    $user = get_user($user);
+			$user = get_user($user);
 
 		$name = $user['username'];
 		if(empty($name))
-		    $name = $lang->guest;
+			$name = $lang->guest;
 		if($formatName)
-		    $name = format_name($name, $user['usergroup'], $user['displaygroup']);
+			$name = format_name($name, $user['usergroup'], $user['displaygroup']);
 
 		if($avatar)
 		{
@@ -71,7 +71,7 @@ class JB_Helpers
 	public static function escapeOutput($string)
 	{
 		if(is_numeric($string))
-		    return (int)$string;
+			return (int)$string;
 		return htmlspecialchars_uni($string);
 	}
 
@@ -80,19 +80,9 @@ class JB_Helpers
 		global $db;
 
 		if(is_numeric($string))
-		    return (int)$string;
+			return (int)$string;
 		if(is_array($string))
-		    $string = my_serialize($string);
+			$string = my_serialize($string);
 		return $db->escape_string($string);
 	}
-}
-
-// Shortcuts for the escape functions - hopefully nobody else likes short names :D
-function e($string)
-{
-	return JB_Helpers::escapeOutput($string);
-}
-function dbe($string)
-{
-	return JB_Helpers::escapeDatabase($string);
 }

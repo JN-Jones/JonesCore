@@ -3,14 +3,14 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.2";
+	private static $version = "0.3";
 
 	// Singleton
 	private static $instance = null;
 	public static function getInstance()
 	{
 		if($instance === null)
-		    $instance = new self();
+			$instance = new self();
 
 		return $instance;
 	}
@@ -24,6 +24,7 @@ class JB_Core
 	{
 		// Set everything up - especially our autoloader
 		define(JB_PATH, MYBB_ROOT."inc/plugins/jones/");
+		define(JB_INCLUDES, JB_PATH."core/includes/");
 		spl_autoload_register(array($this, 'loadClass'));
 
 		// Update function
@@ -52,7 +53,7 @@ class JB_Core
 		if(!empty($version) && version_compare($version, $info['version'], "<"))
 		{
 			// This plugin needs an update!
-			$info['description'] .= "<br />This plugin needs an Update! <a href=\"index.php?module=config-plugins&action=jb_update&plugin={$info['codename']}\">Run</a>";
+			$info['description'] .= "<br /><b>".JB_Lang::get('update_plugin')."</b> <a href=\"index.php?module=config-plugins&action=jb_update&plugin={$info['codename']}\">".JB_Lang::get('run')."</a>";
 		}
 
 		return array_merge($info, $generalInfo);
@@ -67,7 +68,7 @@ class JB_Core
 			if($mybb->version_code < $mybb_minimum)
 			{
 				// MyBB is too old
-				flash_message("MyBB is too old", 'error');
+				flash_message(JB_Lang::get("requirement_mybb"), 'error');
 				admin_redirect('index.php?module=config-plugins');
 			}
 		}
@@ -75,7 +76,7 @@ class JB_Core
 		if(version_compare(PHP_VERSION, $php_minimum, "<"))
 		{
 			// PHP is too old
-			flash_message("PHP is too old", 'error');
+			flash_message(JB_Lang::get("requirement_php"), 'error');
 			admin_redirect('index.php?module=config-plugins');			
 		}
 
@@ -84,16 +85,16 @@ class JB_Core
 			JB_Installer_Templates::install($codename);
 
 		if(JB_Installer_Stylesheets::isNeeded($codename))
-		    JB_Installer_Stylesheets::install($codename);
+			JB_Installer_Stylesheets::install($codename);
 
-    	if(JB_Installer_Settings::isNeeded($codename))
-		    JB_Installer_Settings::install($codename);
+		if(JB_Installer_Settings::isNeeded($codename))
+			JB_Installer_Settings::install($codename);
 
 		if(JB_Installer_Tasks::isNeeded($codename))
-		    JB_Installer_Tasks::install($codename);
+			JB_Installer_Tasks::install($codename);
 
 		if(JB_Installer_Database::isNeeded($codename))
-		    JB_Installer_Database::install($codename);
+			JB_Installer_Database::install($codename);
 
 		// Update our versions cache
 		$info = $codename."_info";
@@ -112,16 +113,16 @@ class JB_Core
 			JB_Installer_Templates::uninstall($codename);
 
 		if(JB_Installer_Stylesheets::isNeeded($codename))
-		    JB_Installer_Stylesheets::install($codename);
+			JB_Installer_Stylesheets::install($codename);
 
 		if(JB_Installer_Settings::isNeeded($codename))
-		    JB_Installer_Settings::uninstall($codename);
+			JB_Installer_Settings::uninstall($codename);
 
 		if(JB_Installer_Tasks::isNeeded($codename))
-		    JB_Installer_Tasks::uninstall($codename);
+			JB_Installer_Tasks::uninstall($codename);
 
 		if(JB_Installer_Database::isNeeded($codename))
-		    JB_Installer_Database::uninstall($codename);
+			JB_Installer_Database::uninstall($codename);
 
 		// Unset our cache
 		$jb_plugins = $cache->read('jb_plugins');
@@ -152,7 +153,7 @@ class JB_Core
 		global $mybb, $cache;
 
 		if($mybb->input['action'] != "jb_update")
-		    return;
+			return;
 
 		$codename = $mybb->get_input('plugin');
 
@@ -161,7 +162,7 @@ class JB_Core
 			// We're updating the core; jb_update_core is defined in "jones/core/include.php"
 			jb_update_core();
 
-			flash_message("Updated", 'success');
+			flash_message(JB_Lang::get("updated_core"), 'success');
 			admin_redirect('index.php?module=config-plugins');
 		}
 
@@ -182,7 +183,7 @@ class JB_Core
 		$jb_plugins[$codename] = $info['version'];
 		$cache->update('jb_plugins', $jb_plugins);
 
-		flash_message("Updated", 'success');
+		flash_message(JB_Lang::get("updated_plugin"), 'success');
 		admin_redirect('index.php?module=config-plugins');
 	}
 
@@ -193,7 +194,7 @@ class JB_Core
 		if(version_compare($version, static::$version, ">"))
 		{
 			// Update baby!
-			echo "<div class=\"alert\">Jones Core needs an update! <a href=\"index.php?module=config-plugins&action=jb_update&plugin=core\">Update</a></div>";
+			echo "<div class=\"alert\">".JB_Lang::get("update_core")." <a href=\"index.php?module=config-plugins&action=jb_update&plugin=core\">".JB_Lang::get("run")."</a></div>";
 		}
 	}
 
@@ -220,11 +221,11 @@ class JB_Core
 		{
 			// Only activated plugins!
 			if(!in_array($codename, $active))
-			    continue;
+				continue;
 
 			// No template edits? Nice!
 			if(!file_exists(JB_PATH."{$codename}/install/template_edits.php"))
-			    continue;
+				continue;
 
 			require_once JB_PATH."{$codename}/install/template_edits.php";
 	
@@ -244,8 +245,7 @@ class JB_Core
 
 	public function call($url)
 	{
-		// TODO! dummy here
-		return "1.0";
+		return fetch_remote_file("http://jonesboard.de{$url}");
 	}
 
 	// Autoloader functions
@@ -262,17 +262,17 @@ class JB_Core
 	}
 	
 	public function findFile($class = '')
-    {
+	{
 		$classParts = explode('_', $class);
 		$jb = array_shift($classParts);
-       	if($jb != "JB")
-		    return;
+		if($jb != "JB")
+			return;
 
 		$package = $classParts[0];
-	    $extra = "";
+		$extra = "";
 		if(!is_dir(JB_PATH.$package))
 		{
-		    $package = "core";
+			$package = "core";
 		}
 		else
 		{
@@ -280,7 +280,7 @@ class JB_Core
 
 			$el = count($classParts);
 			$last = $classParts[$el-2];
-    		if(strtolower($last) != "version")
+			if(strtolower($last) != "version")
 				$extra = "/classes";
 		}
 
@@ -289,6 +289,16 @@ class JB_Core
 		$path = JB_PATH.$package."/".implode("/", $classParts).$extra."/".$className.".php";
 
 		if(file_exists($path))
-		    return $path;
-    }
+			return $path;
+	}
+}
+
+// Shortcuts for the escape functions - hopefully nobody else likes short names :D
+function e($string)
+{
+	return JB_Helpers::escapeOutput($string);
+}
+function dbe($string)
+{
+	return JB_Helpers::escapeDatabase($string);
 }

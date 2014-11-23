@@ -11,12 +11,15 @@ else
 	JB_Core::i();
 }
 
+if(JB_CORE_INSTALLED === false && $plugins != null)
+	$plugins->add_hook("admin_config_plugins_plugin_list", "jonescore_notice");
+
 // Called on installation when the core isn't set up
 function jb_install_core()
 {
 	// We don't want to have any problems guys
 	if(JB_CORE_INSTALLED === true)
-	    return;
+		return;
 
 	$auto = jb_download_core();
 
@@ -25,11 +28,13 @@ function jb_install_core()
 	{
 		global $page;
 
+		// Languages not available, using english which (hopefully) everybody understands
+
 		$page->output_header("Jones Core not installed");
 
 		$table = new Table;
 		$table->construct_header("Attention");
-		$table->construct_cell("Jones Core classes are missing. Please load them from <a href=\"https://github.com/JN-Jones/JonesCore\">GitHub</a> and follow the instractions in the ReadMe. Afterwards you can reload this page.");
+		$table->construct_cell("Jones Core classes are missing. Please load them from <a href=\"https://github.com/JN-Jones/JonesCore\">GitHub</a> and follow the instructions in the ReadMe. Afterwards you can reload this page.");
 		$table->construct_row();
 		$table->output("Jones Core not installed");
 
@@ -46,13 +51,13 @@ function jb_update_core()
 	{
 		global $page;
 
-		$page->output_header("Auto Update failed");
+		$page->output_header(JB_Lang::get("update_failed"));
 
 		$table = new Table;
-		$table->construct_header("Attention");
-		$table->construct_cell("Not able to auto update the core. Please load it from <a href=\"https://github.com/JN-Jones/JonesCore\">GitHub</a> and follow the instractions in the ReadMe.");
+		$table->construct_header(JB_Lang::get("attention"));
+		$table->construct_cell(JB_Lang::get("update_get"));
 		$table->construct_row();
-		$table->output("Auto Update failed");
+		$table->output(JB_Lang::get("update_failed"));
 
 		$page->output_footer();
 		exit;
@@ -69,7 +74,7 @@ function jb_download_core()
 
 	// Wasn't able to get the zip from github
 	if($content === false || empty($content))
-	    return false;
+		return false;
 
 	// Now save the zip!
 	$file = @fopen(MYBB_ROOT."inc/plugins/jones/core/temp.zip", "w");
@@ -103,18 +108,18 @@ function jb_move_recursive($direction)
 {
 	global $mybb;
 	if(substr($direction, -1, 1) != "/")
-	    $direction .= "/";
+		$direction .= "/";
 	if(!is_dir($direction))
-	    die("Something went wrong!");
+		die("Something went wrong!");
 	$dir = opendir($direction);
 	while(($new = readdir($dir)) !== false) {
 		if($new == "." || $new == "..")
-		    continue;
+			continue;
 
 		if(is_file($direction.$new)) {
 			if(substr($new, 0, 4) == ".git" || strtolower(substr($new, 0, 6)) == "readme") {
 				unlink($direction.$new);
-			    continue;
+				continue;
 			}
 			$old_dir = $direction.$new;
 			$t = str_replace(MYBB_ROOT, "", $old_dir);
@@ -127,13 +132,13 @@ function jb_move_recursive($direction)
 			$start = strlen(MYBB_ROOT)+$t2;
 			$relative = substr($old_dir, $start+1);
 			if(substr($relative, 0, 6) == "admin/")
-			    $relative = $mybb->config['admin_dir']."/".substr($relative, 6);
+				$relative = $mybb->config['admin_dir']."/".substr($relative, 6);
 
 			$new_dir = MYBB_ROOT.$relative;
 			$cdir = substr($new_dir, 0, strrpos($new_dir, "/"));
 
 			if(!is_dir($cdir))
-			    mkdir($cdir, 0777, true);
+				mkdir($cdir, 0777, true);
 
 			rename($old_dir, $new_dir);
 		} elseif(is_dir($direction.$new)) {
@@ -146,13 +151,13 @@ function jb_move_recursive($direction)
 function jb_remove_recursive($direction)
 {
 	if(substr($direction, -1, 1) != "/")
-	    $direction .= "/";
+		$direction .= "/";
 	if(!is_dir($direction))
-	    die("Something went wrong");
+		die("Something went wrong");
 	$dir = opendir($direction);
 	while(($new = readdir($dir)) !== false) {
 		if($new == "." || $new == "..")
-		    continue;
+			continue;
 
 		if(is_file($direction.$new)) {
 			unlink($direction.$new);
@@ -162,4 +167,18 @@ function jb_remove_recursive($direction)
 	}
 	closedir($dir);
 	rmdir($direction);
+}
+
+function jonescore_notice()
+{
+	// No need to check for activated plugins
+	// If a plugin is activated this file is included before the hook is called and so this function
+	// If no plugin is activated this file is included after the hook is called and so this function won't be called
+
+	// First: try to install it on the fly
+	$auto = jb_download_core();
+
+	// No languages available - english!
+	if($auto === false)
+		echo "<div class=\"alert\">Jones Core needs to be installed! Please load them from <a href=\"https://github.com/JN-Jones/JonesCore\">GitHub</a> and follow the instractions in the ReadMe. Afterwards you can reload this page.</div>";
 }
