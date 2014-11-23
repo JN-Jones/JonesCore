@@ -2,7 +2,7 @@
 
 // This file is only supposed to do some general checks (eg Core installed)
 if(!file_exists(MYBB_ROOT."inc/plugins/jones/core/Core.php"))
-    define("JB_CORE_INSTALLED", false);
+	define("JB_CORE_INSTALLED", false);
 else
 {
 	define("JB_CORE_INSTALLED", true);
@@ -19,7 +19,7 @@ function jb_install_core()
 {
 	// We don't want to have any problems guys
 	if(JB_CORE_INSTALLED === true)
-		return;
+		return true;
 
 	$auto = jb_download_core();
 
@@ -41,6 +41,9 @@ function jb_install_core()
 		$page->output_footer();
 		exit;	
 	}
+
+	require_once MYBB_ROOT."inc/plugins/jones/core/Core.php";
+	return true;
 }
 
 function jb_update_core()

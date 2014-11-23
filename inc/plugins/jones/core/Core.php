@@ -50,7 +50,8 @@ class JB_Core
 		// Do we need an update?
 		$jb_plugins = $cache->read('jb_plugins');
 		$version = $jb_plugins[$info['codename']];
-		if(!empty($version) && version_compare($version, $info['version'], "<"))
+		$install = "{$info['codename']}_is_installed";
+		if((!function_exists($install) || $install()) && (empty($version) || version_compare($version, $info['version'], "<")))
 		{
 			// This plugin needs an update!
 			$info['description'] .= "<br /><b>".JB_Lang::get('update_plugin')."</b> <a href=\"index.php?module=config-plugins&action=jb_update&plugin={$info['codename']}\">".JB_Lang::get('run')."</a>";
