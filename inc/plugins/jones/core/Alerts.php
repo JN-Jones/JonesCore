@@ -77,11 +77,21 @@ class JB_Alerts
 		global $cache;
 
 		$jb_plugins = $cache->read("jb_plugins");
+		$active = $cache->read("plugins");
+		$active = $active['active'];
 
 		foreach(array_keys($jb_plugins) as $codename)
 		{
+			// Always install 
 			if(JB_Installer_Alerts::isNeeded($codename))
 				JB_Installer_Alerts::install($codename);
+
+			// If the plugin is also activated we'll also activate our alerts
+			if(in_array($codename, $active))
+			{
+				if(JB_Activate_Alerts::isNeeded($codename))
+					JB_Activate_Alerts::activate($codename);
+			}
 		}
 	}
 
