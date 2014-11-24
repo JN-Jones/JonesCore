@@ -1,5 +1,8 @@
 <?php
 
+// Whether or not to use the development version
+define("USE_DEVELOPMENT", false);
+
 // This file is only supposed to do some general checks (eg Core installed)
 if(!file_exists(MYBB_ROOT."inc/plugins/jones/core/Core.php"))
 	define("JB_CORE_INSTALLED", false);
@@ -89,7 +92,11 @@ function jb_download_core()
 	if(!class_exists("ZipArchive"))
 		return false;
 
-	$content = fetch_remote_file("https://codeload.github.com/JN-Jones/JonesCore/zip/master");
+	$branch = "master";
+	if(defined("USE_DEVELOPMENT") && USE_DEVELOPMENT === true)
+		$branch = "development";
+
+	$content = fetch_remote_file("https://codeload.github.com/JN-Jones/JonesCore/zip/{$branch}");
 
 	// Wasn't able to get the zip from github
 	if($content === false || empty($content))
@@ -116,7 +123,7 @@ function jb_download_core()
 	    return false;
 
 	// Now move the core recursive and then delete everything
-	jb_move_recursive(MYBB_ROOT."inc/plugins/jones/core/temp/JonesCore-master/");
+	jb_move_recursive(MYBB_ROOT."inc/plugins/jones/core/temp/JonesCore-{$branch}/");
 	jb_remove_recursive(MYBB_ROOT."inc/plugins/jones/core/temp/");
 	@unlink(MYBB_ROOT."inc/plugins/jones/core/temp.zip");
 

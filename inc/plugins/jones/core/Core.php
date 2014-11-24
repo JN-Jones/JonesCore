@@ -190,7 +190,10 @@ class JB_Core
 
 	public function checkVersion()
 	{
-		$version = $this->call("/version.php?type=core");
+		$l = "/version.php?type=core";
+		if(defined("USE_DEVELOPMENT") && USE_DEVELOPMENT === true)
+			$l .= "&dev=1";
+		$version = $this->call($l);
 
 		if(version_compare($version, static::$version, ">"))
 		{
