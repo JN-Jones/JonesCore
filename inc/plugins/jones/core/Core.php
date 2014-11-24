@@ -22,10 +22,15 @@ class JB_Core
 
 	private function __construct()
 	{
-		// Set everything up - especially our autoloader
+		// Define some path constants
 		define(JB_PATH, MYBB_ROOT."inc/plugins/jones/");
 		define(JB_INCLUDES, JB_PATH."core/includes/");
+
+		// Register our autoloader
 		spl_autoload_register(array($this, 'loadClass'));
+		
+		// Initialize our MyAlerts bridge
+		JB_Alerts::init();
 
 		// Update function
 		global $plugins;
@@ -97,6 +102,9 @@ class JB_Core
 		if(JB_Installer_Database::isNeeded($codename))
 			JB_Installer_Database::install($codename);
 
+		if(JB_Installer_Alerts::isNeeded($codename))
+			JB_Installer_Alerts::install($codename);
+
 		// Update our versions cache
 		$info = $codename."_info";
 		$info = $info();
@@ -125,6 +133,9 @@ class JB_Core
 		if(JB_Installer_Database::isNeeded($codename))
 			JB_Installer_Database::uninstall($codename);
 
+		if(JB_Installer_Alerts::isNeeded($codename))
+			JB_Installer_Alerts::install($codename);
+
 		// Unset our cache
 		$jb_plugins = $cache->read('jb_plugins');
 		unset($jb_plugins[$codename]);
@@ -138,6 +149,9 @@ class JB_Core
 
 		if(JB_Activate_Task::isNeeded($codename))
 			JB_Activate_Task::activate($codename);
+
+		if(JB_Activate_Alerts::isNeeded($codename))
+			JB_Activate_Alerts::activate($codename);
 	}
 
 	public function deactivate($codename)
@@ -147,6 +161,9 @@ class JB_Core
 
 		if(JB_Activate_Task::isNeeded($codename))
 			JB_Activate_Task::deactivate($codename);
+
+		if(JB_Activate_Alerts::isNeeded($codename))
+			JB_Activate_Alerts::deactivate($codename);
 	}
 
 	public function doUpgrade()
