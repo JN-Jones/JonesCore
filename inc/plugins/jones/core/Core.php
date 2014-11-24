@@ -170,6 +170,10 @@ class JB_Core
 	{
 		global $mybb, $cache;
 
+		// Doesn't really belong here, but better than having another function just for that
+		if($mybb->input['action'] == "jb_version")
+			die("JonesCore ".static::$version." running on MyBB {$mybb->version} with PHP ".PHP_VERSION);
+
 		if($mybb->input['action'] != "jb_update")
 			return;
 
