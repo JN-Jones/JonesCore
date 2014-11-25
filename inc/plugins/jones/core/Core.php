@@ -306,9 +306,10 @@ class JB_Core
 		{
 			array_shift($classParts);
 
-			$el = count($classParts);
-			$last = $classParts[$el-2];
-			if(strtolower($last) != "version")
+//			$el = count($classParts);
+//			$last = $classParts[$el-2];
+//			if(strtolower($last) != "version")
+			if(!is_dir(JB_PATH.$package."/".implode("/", $classParts)))
 				$extra = "/classes";
 		}
 
