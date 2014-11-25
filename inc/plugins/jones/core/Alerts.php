@@ -19,17 +19,36 @@ class JB_Alerts
 		if(!static::isActivated()
 			return;
 
+		// Need to do this after MyAlerts created the managers (on global_start)
+		$plugins->add_hook("global_start", array("JB_Alerts", "registerFormatters"), 11);
+	}
+
+	public static function registerFormatters()
+	{
+		global $mybb, $lang;
+
 		// Loop through all types and register the correct formatter
 		foreach(static::getTypes() as $codename => $types)
 		{
 			foreach($types as $type)
 			{
-				// TODO: Register formatter
+				// Do we have a custom formatter for this type?
+				if(class_exists("JB_{$codename}_Alerts_{$type}Formatter"))
+				{
+					$formatter = "JB_{$codename}_Alerts_{$type}Formatter";
+					$formatter = new $formatter($mybb, $lang, $type);
+				}
+				// Otherweise use our base formatter
+				else
+				{
+					$formatter = new JB_Alerts_BaseFormatter($mybb, $lang, $type);
+				}
+				$GLOBALS['mybbstuff_myalerts_alert_formatter_manager']->registerFormatter($formatter);
 			}
 		}
 	}
 
-	public static function trigger($codename, $alert, $to)
+	public static function trigger($codename, $alert, $to, $extra=array(), $from=false)
 	{
 		$name = "jb_{$codename}_{$alert}";
 
@@ -38,7 +57,14 @@ class JB_Alerts
 
 		foreach($to as $id)
 		{
-			$alert = new MybbStuff_MyAlerts_Entity_Alert::make($to, $name);
+			$alert = new MybbStuff_MyAlerts_Entity_Alert::make($to, $name, 0, $extra);
+			if($from !== false)
+			{
+				if(is_array($from))
+					$alert->setFromUser($from);
+				else
+					$alert->setFromUser(get_user($from);
+			}
 			$GLOBALS['mybbstuff_myalerts_alert_manager']->addAlert($alert);
 		}
 	}
