@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.4 dev 2";
+	private static $version = "0.4 dev 3";
 
 	// Singleton
 	private static $instance = null;
@@ -39,6 +39,9 @@ class JB_Core
 		$plugins->add_hook("admin_config_plugins_plugin_list", array($this, "checkVersion"));
 		// Importing a new theme
 		$plugins->add_hook("admin_style_themes_import_commit", array($this, "updateTheme"));
+		// Building our WIO list
+		$plugins->add_hook("fetch_wol_activity_end", array("JB_WIO_Handler", "buildArray"));
+		$plugins->add_hook("build_friendly_wol_location_end", array("JB_WIO_Handler", "buildLink"));
 	}
 
 	public function getInfo($info)
