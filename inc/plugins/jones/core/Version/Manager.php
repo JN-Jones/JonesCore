@@ -19,5 +19,23 @@ abstract class JB_Version_Manager
 					$updater::execute();
 			}
 		}
+
+		if(JB_Installer_Templates::isNeeded($codename))
+			JB_Installer_Templates::update($codename);
+
+		if(JB_Installer_Stylesheets::isNeeded($codename))
+			JB_Installer_Stylesheets::update($codename);
+
+		if(JB_Installer_Settings::isNeeded($codename))
+			JB_Installer_Settings::update($codename);
+
+		if(JB_Installer_Tasks::isNeeded($codename))
+			JB_Installer_Tasks::update($codename);
+
+		if(JB_Installer_Database::isNeeded($codename))
+			JB_Installer_Database::update($codename);
+
+		if(JB_Installer_Alerts::isNeeded($codename))
+			JB_Installer_Alerts::update($codename);
 	}
 }

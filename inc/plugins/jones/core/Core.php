@@ -175,7 +175,13 @@ class JB_Core
 
 		// Doesn't really belong here, but better than having another function just for that
 		if($mybb->input['action'] == "jb_version")
-			die("JonesCore ".static::$version." running on MyBB {$mybb->version} with PHP ".PHP_VERSION);
+		{
+			$jb_plugins = $cache->read('jb_plugins');
+			$plugins = "";
+			foreach($jb_plugins as $codename => $version)
+				$plugins .= "<li>{$codename} {$version}</li>";
+			die("JonesCore ".static::$version." running on MyBB {$mybb->version} with PHP ".PHP_VERSION." and the following plugins:<br /><ul>{$plugins}</ul>");
+		}
 
 		if($mybb->input['action'] != "jb_update")
 			return;
@@ -306,9 +312,6 @@ class JB_Core
 		{
 			array_shift($classParts);
 
-//			$el = count($classParts);
-//			$last = $classParts[$el-2];
-//			if(strtolower($last) != "version")
 			if(!is_dir(JB_PATH.$package."/".implode("/", $classParts)))
 				$extra = "/classes";
 		}
