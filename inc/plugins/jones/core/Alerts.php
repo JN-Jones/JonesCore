@@ -50,6 +50,10 @@ class JB_Alerts
 
 	public static function trigger($codename, $alert, $to, $extra=array(), $from=false)
 	{
+		// Nothing to do if MyAlerts is deactivated
+		if(!static::isActivated())
+			return;
+
 		$name = "jb_{$codename}_{$alert}";
 
 		if(!is_array($to))
