@@ -6,7 +6,7 @@ class JB_Installer_Tasks extends JB_Installer_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/tasks.php";
+		require JB_PATH."{$codename}/install/tasks.php";
 
 		if(!empty($tasks))
 		{
@@ -30,11 +30,16 @@ class JB_Installer_Tasks extends JB_Installer_Base
 		}
 	}
 
+	static function update($codename)
+	{
+		// TODO!
+	}
+
 	static function uninstall($codename)
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/tasks.php";
+		require JB_PATH."{$codename}/install/tasks.php";
 
 		if(!empty($tasks))
 		{

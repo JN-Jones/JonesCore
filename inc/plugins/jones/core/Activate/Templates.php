@@ -6,7 +6,7 @@ class JB_Activate_Templates extends JB_Activate_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/template_edits.php";
+		require JB_PATH."{$codename}/install/template_edits.php";
 
 		// Template Edits
 		if(!empty($edits))
@@ -27,7 +27,7 @@ class JB_Activate_Templates extends JB_Activate_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/template_edits.php";
+		require JB_PATH."{$codename}/install/template_edits.php";
 
 		// Template Edits
 		if(!empty($edits))

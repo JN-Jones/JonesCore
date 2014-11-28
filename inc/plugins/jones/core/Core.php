@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.4 dev 3";
+	private static $version = "0.4 dev 4";
 
 	// Singleton
 	private static $instance = null;
@@ -137,7 +137,7 @@ class JB_Core
 			JB_Installer_Database::uninstall($codename);
 
 		if(JB_Installer_Alerts::isNeeded($codename))
-			JB_Installer_Alerts::install($codename);
+			JB_Installer_Alerts::uninstall($codename);
 
 		// Unset our cache
 		$jb_plugins = $cache->read('jb_plugins');
@@ -150,8 +150,8 @@ class JB_Core
 		if(JB_Activate_Templates::isNeeded($codename))
 			JB_Activate_Templates::activate($codename);
 
-		if(JB_Activate_Task::isNeeded($codename))
-			JB_Activate_Task::activate($codename);
+		if(JB_Activate_Tasks::isNeeded($codename))
+			JB_Activate_Tasks::activate($codename);
 
 		if(JB_Activate_Alerts::isNeeded($codename))
 			JB_Activate_Alerts::activate($codename);
@@ -162,8 +162,8 @@ class JB_Core
 		if(JB_Activate_Templates::isNeeded($codename))
 			JB_Activate_Templates::deactivate($codename);
 
-		if(JB_Activate_Task::isNeeded($codename))
-			JB_Activate_Task::deactivate($codename);
+		if(JB_Activate_Tasks::isNeeded($codename))
+			JB_Activate_Tasks::deactivate($codename);
 
 		if(JB_Activate_Alerts::isNeeded($codename))
 			JB_Activate_Alerts::deactivate($codename);

@@ -1,42 +1,49 @@
 <?php
 
-class JB_Activate_Tasks extends JB_Activate_Base
+class JB_Activate_Alerts extends JB_Activate_Base
 {
 	static function activate($codename)
 	{
-		global $db;
+		global $db, $cache;
 
-		require_once JB_PATH."{$codename}/install/alerts.php";
+		require JB_PATH."{$codename}/install/alerts.php";
 
-		if(!empty($alerts))
 		{
+			$manager = $GLOBALS['mybbstuff_myalerts_alert_type_manager'];
+			if($manager == null)
+				$manager = new MybbStuff_MyAlerts_AlertTypeManager($db, $cache);
+
 			$updated = array();
 			foreach($alerts as $alert)
 			{
-				$type = $GLOBALS['mybbstuff_myalerts_alert_type_manager']->getByCode("JB_{$codename}_{$alert}");
+				$type = $manager->getByCode("JB_{$codename}_{$alert}");
 				$type->setEnabled(true);
 				$updated[] = $type;
 			}
-			$GLOBALS['mybbstuff_myalerts_alert_type_manager']->updateAlertTypes($updated);
+			$manager->updateAlertTypes($updated);
 		}
 	}
 
 	static function deactivate($codename)
 	{
-		global $db;
+		global $db, $cache;
 
-		require_once JB_PATH."{$codename}/install/alerts.php";
+		require JB_PATH."{$codename}/install/alerts.php";
 
 		if(!empty($alerts))
 		{
+			$manager = $GLOBALS['mybbstuff_myalerts_alert_type_manager'];
+			if($manager == null)
+				$manager = new MybbStuff_MyAlerts_AlertTypeManager($db, $cache);
+
 			$updated = array();
 			foreach($alerts as $alert)
 			{
-				$type = $GLOBALS['mybbstuff_myalerts_alert_type_manager']->getByCode("JB_{$codename}_{$alert}");
+				$type = $manager->getByCode("JB_{$codename}_{$alert}");
 				$type->setEnabled(false);
 				$updated[] = $type;
 			}
-			$GLOBALS['mybbstuff_myalerts_alert_type_manager']->updateAlertTypes($updated);
+			$manager->updateAlertTypes($updated);
 		}
 	}
 

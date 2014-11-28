@@ -6,7 +6,7 @@ class JB_Activate_Tasks extends JB_Activate_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/tasks.php";
+		require JB_PATH."{$codename}/install/tasks.php";
 
 		if(!empty($tasks))
 		{
@@ -30,7 +30,7 @@ class JB_Activate_Tasks extends JB_Activate_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/tasks.php";
+		require JB_PATH."{$codename}/install/tasks.php";
 
 		if(!empty($tasks))
 		{

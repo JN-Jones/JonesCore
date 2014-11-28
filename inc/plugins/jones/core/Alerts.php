@@ -8,15 +8,16 @@ class JB_Alerts
 
 	public static function init()
 	{
+		global $plugins;
+
 		if(!static::isInstalled())
 		{
 			// Not installed so add our nice hook to add our alerts when installing
-			global $plugins;
 			$plugins->add_hook("myalerts_install", array("JB_Alerts", "onInstall"));
 		}
 
 		// Nothing to do if MyAlerts is deactivated
-		if(!static::isActivated()
+		if(!static::isActivated())
 			return;
 
 		// Need to do this after MyAlerts created the managers (on global_start)
@@ -30,18 +31,20 @@ class JB_Alerts
 		// Loop through all types and register the correct formatter
 		foreach(static::getTypes() as $codename => $types)
 		{
+			// Make sure that the language is loaded!
+			$lang->load($codename);
 			foreach($types as $type)
 			{
 				// Do we have a custom formatter for this type?
 				if(class_exists("JB_{$codename}_Alerts_{$type}Formatter"))
 				{
 					$formatter = "JB_{$codename}_Alerts_{$type}Formatter";
-					$formatter = new $formatter($mybb, $lang, $type);
+					$formatter = new $formatter($mybb, $lang, "JB_{$codename}_{$type}");
 				}
 				// Otherweise use our base formatter
 				else
 				{
-					$formatter = new JB_Alerts_BaseFormatter($mybb, $lang, $type);
+					$formatter = new JB_Alerts_BaseFormatter($mybb, $lang, "JB_{$codename}_{$type}");
 				}
 				$GLOBALS['mybbstuff_myalerts_alert_formatter_manager']->registerFormatter($formatter);
 			}
@@ -54,26 +57,30 @@ class JB_Alerts
 		if(!static::isActivated())
 			return;
 
-		$name = "jb_{$codename}_{$alert}";
+		$name = "JB_{$codename}_{$alert}";
+		$type = $GLOBALS['mybbstuff_myalerts_alert_type_manager']->getByCode($name);
+		if($type == null)
+			return;
 
 		if(!is_array($to))
 			$to = array($to);
+		$to = array_unique($to);
 
 		foreach($to as $id)
 		{
-			$alert = new MybbStuff_MyAlerts_Entity_Alert::make($to, $name, 0, $extra);
+			$alert = MybbStuff_MyAlerts_Entity_Alert::make($id, $type, 0, $extra);
 			if($from !== false)
 			{
 				if(is_array($from))
 					$alert->setFromUser($from);
 				else
-					$alert->setFromUser(get_user($from);
+					$alert->setFromUser(get_user($from));
 			}
 			$GLOBALS['mybbstuff_myalerts_alert_manager']->addAlert($alert);
 		}
 	}
 
-	public static getTypes()
+	public static function getTypes()
 	{
 		if(static::$types !== null)
 			return static::$types;
@@ -100,11 +107,16 @@ class JB_Alerts
 				static::$types[$codename] = $alerts;
 			}
 		}
+
+		return static::$types;
 	}
 
-	public static onInstall()
+	public static function onInstall()
 	{
 		global $cache;
+
+		// Flash our cache - myalerts is installed now
+		static::$installed = true;
 
 		$jb_plugins = $cache->read("jb_plugins");
 		$active = $cache->read("plugins");
@@ -125,19 +137,21 @@ class JB_Alerts
 		}
 	}
 
-	public static isInstalled()
+	public static function isInstalled()
 	{
 		if(static::$installed !== null)
 			return static::$installed;
 
 		// File not uploaded? -> Not installed
-		if(!file_exists(MYBB_ROOT." inc/plugins/myalerts.php"))
+		if(!file_exists(MYBB_ROOT."inc/plugins/myalerts.php"))
 		{
 			static::$installed = false;
 			return false;
 		}
 
-		require_once MYBB_ROOT."inc/plugins_myalerts.php";
+		// Though we don't use $plugins ourselves we need to globalize it here - otherwise the required myalerts file may throw an error
+		global $plugins;
+		require_once MYBB_ROOT."inc/plugins/myalerts.php";
 
 		$func = "myalerts_is_installed";
 

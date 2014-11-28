@@ -6,7 +6,7 @@ class JB_Installer_Database extends JB_Installer_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/tables.php";
+		require JB_PATH."{$codename}/install/tables.php";
 
 		// MyBB's way of creating tables - no need to modify it
 		if(!empty($tables))
@@ -37,11 +37,16 @@ class JB_Installer_Database extends JB_Installer_Base
 		}
 	}
 
+	static function update($codename)
+	{
+		// TODO!
+	}
+
 	static function uninstall($codename)
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/tables.php";
+		require JB_PATH."{$codename}/install/tables.php";
 
 		if(!empty($tables))
 		{

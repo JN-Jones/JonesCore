@@ -6,7 +6,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/settings.php";
+		require JB_PATH."{$codename}/install/settings.php";
 
 			// Settings Group
 		if(!empty($settingsgroup))
@@ -45,6 +45,11 @@ class JB_Installer_Settings extends JB_Installer_Base
 		rebuild_settings();
 	}
 
+	static function update($codename)
+	{
+		// TODO!
+	}
+
 	static function uninstall($codename)
 	{
 		global $db;
@@ -61,7 +66,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 		else
 		{
 			// We didn't have luck - need to loop through every setting and delete them
-			require_once JB_PATH."{$codename}/install/settings.php";
+			require JB_PATH."{$codename}/install/settings.php";
 			if(!empty($settings))
 			{
 				foreach($settings as $setting)

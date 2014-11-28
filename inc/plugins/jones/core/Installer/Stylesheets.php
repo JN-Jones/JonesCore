@@ -6,7 +6,7 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 	{
 		global $db, $mybb;
 
-		require_once JB_PATH."{$codename}/install/stylesheets.php";
+		require JB_PATH."{$codename}/install/stylesheets.php";
 
 		// Settings
 		if(!empty($stylesheets))
@@ -44,11 +44,16 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 		}
 	}
 
+	static function update($codename)
+	{
+		// TODO!
+	}
+
 	static function uninstall($codename)
 	{
 		global $db, $mybb;
 
-		require_once JB_PATH."{$codename}/install/stylesheets.php";
+		require JB_PATH."{$codename}/install/stylesheets.php";
 
 		// Settings
 		if(!empty($stylesheets))
