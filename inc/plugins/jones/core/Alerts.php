@@ -8,7 +8,7 @@ class JB_Alerts
 
 	public static function init()
 	{
-		global $plugins;
+		global $plugins, $mybb;
 
 		if(!static::isInstalled())
 		{
@@ -20,8 +20,9 @@ class JB_Alerts
 		if(!static::isActivated())
 			return;
 
-		// Need to do this after MyAlerts created the managers (on global_start)
-		$plugins->add_hook("global_start", array("JB_Alerts", "registerFormatters"), 11);
+		if($mybb->user['uid'] > 0)
+			// Need to do this after MyAlerts created the managers (on global_start)
+			$plugins->add_hook("global_start", array("JB_Alerts", "registerFormatters"), 11);
 	}
 
 	public static function registerFormatters()
@@ -68,6 +69,10 @@ class JB_Alerts
 
 		foreach($to as $id)
 		{
+			// Skip guests
+			if($id == 0)
+				continue;
+
 			$alert = MybbStuff_MyAlerts_Entity_Alert::make($id, $type, 0, $extra);
 			if($from !== false)
 			{

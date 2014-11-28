@@ -4,9 +4,9 @@ class JB_WIO_Handler
 {
 	private static $handlers = null;
 
-	public static buildArray()
+	public static function buildArray($user_activity)
 	{
-		global $parameters;
+		global $parameters, $user;
 		$split_loc = explode(".php", $user_activity['location']);
 		if($split_loc[0] == $user['location']) {
 			$filename = '';
@@ -27,34 +27,38 @@ class JB_WIO_Handler
 		return $user_activity;
 	}
 
-	public static buildLink()
+	public static function buildLink($array)
 	{
 		global $lang;
 
+		$user_activity = $array['user_activity'];
+		$filename = $user_activity['activity'];
+
 		foreach(static::getHandlers() as $handler)
 		{
-			if(!$handler::handles($user_activity['activity'], $user_activity[$filename]['action']))
+			if(!$handler::handles($filename, $user_activity[$filename]['action']))
 				continue;
 
-			$action = $handler::getActionFor($user_activity['activity'], $user_activity[$filename]['action']);
+			$action = $handler::getActionFor($filename, $user_activity[$filename]['action']);
 
+			$l = "{$filename}_{$action}";
 			if(method_exists($handler, "build".ucfirst($action)))
 			{
 				$me = "build".ucfirst($action);
-				$link = $handler::$me;
+				$link = $handler::$me($user_activity[$filename]['add'], $user_activity[$filename]['action']);
 			}
-			else if(isset($lang->$action))
-				$link = $lang->$action;
+			else if(isset($lang->$l))
+				$link = $lang->$l;
 			else
-				$link = $action;
+				$link = $l;
 
-			$array['location_name'] = $lang->todo_wol;          	
+			$array['location_name'] = $link;          	
 		}
 		
 		return $array;
 	}
 
-	private static getHandlers()
+	private static function getHandlers()
 	{
 		if(static::$handlers !== null)
 			return static::$handlers;
@@ -64,6 +68,8 @@ class JB_WIO_Handler
 		$jb_plugins = $cache->read("jb_plugins");
 		$active = $cache->read("plugins");
 		$active = $active['active'];
+
+		static::$handlers = array();
 
 		foreach(array_keys($jb_plugins) as $codename)
 		{

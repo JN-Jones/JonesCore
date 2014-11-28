@@ -6,7 +6,7 @@ abstract class JB_WIO_Base
 	// array("file" => array("action" => "todo"))
 	// Where todo is either a language string (using $lang->todo to retrieve)
 	// or the name of a static function which is called (eg when "todo" the function "buildTodo" is called)
-	private static $handle = array();
+	protected static $handle = array();
 
 	// Use this function if you want to load language vars or things like that
 	public static function init() {}

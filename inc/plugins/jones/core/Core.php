@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.4 dev 4";
+	private static $version = "0.4 dev 5";
 
 	// Singleton
 	private static $instance = null;
@@ -312,7 +312,10 @@ class JB_Core
 		{
 			array_shift($classParts);
 
-			if(!is_dir(JB_PATH.$package."/".implode("/", $classParts)))
+			$el = count($classParts);
+			$last = $classParts[$el-2];
+
+			if(strtolower($last) != "version" && strtolower($last) != "wio")
 				$extra = "/classes";
 		}
 
