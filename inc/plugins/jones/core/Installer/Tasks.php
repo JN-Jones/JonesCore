@@ -32,7 +32,35 @@ class JB_Installer_Tasks extends JB_Installer_Base
 
 	static function update($codename)
 	{
-		// TODO!
+		global $db;
+
+		require JB_PATH."{$codename}/install/tasks.php";
+
+		if(!empty($tasks))
+		{
+			$dtask = array(
+				"file"		=> $codename,
+				"minute"	=> "0,30",
+				"hour"		=> "*",
+				"day"		=> "*",
+				"weekday"	=> "*",
+				"month"		=> "*",
+				"enabled"	=> "0", // Should be done on activating
+				"logging"	=> "1",
+			);
+
+			foreach($tasks as $task)
+			{
+				$task = array_merge($dtask, $task);
+
+				$query = $db->simple_select("tasks", "file", "file='".$db->escape_string($task['file'])."'");
+				if($db->num_rows($query) == 0)
+				{
+					$task['nextrun'] = fetch_next_run($task);
+					$db->insert_query("tasks", $new_task);
+				}
+			}
+		}
 	}
 
 	static function uninstall($codename)

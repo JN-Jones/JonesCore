@@ -25,7 +25,28 @@ class JB_Installer_Alerts extends JB_Installer_Base
 
 	static function update($codename)
 	{
-		// TODO!
+		require JB_PATH."{$codename}/install/alerts.php";
+
+		if(!empty($alerts))
+		{
+			global $db, $cache;
+			$pls = $cache->read("plugins");
+			$activated = in_array($codename, $pls['active']);
+
+			$manager = $GLOBALS['mybbstuff_myalerts_alert_type_manager'];
+			if($manager == null)
+				$manager = new MybbStuff_MyAlerts_AlertTypeManager($db, $cache);
+
+			foreach($alerts as $alert)
+			{
+				$test = $manager->getByCode("JB_{$codename}_{$alert}");
+				if($test === null)
+				{
+					$alertType = (new MybbStuff_MyAlerts_Entity_AlertType())->setCode("JB_{$codename}_{$alert}")->setEnabled($activated);
+					$manager->add($alertType);
+				}
+			}
+		}
 	}
 
 	static function uninstall($codename)

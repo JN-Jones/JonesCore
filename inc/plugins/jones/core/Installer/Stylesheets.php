@@ -23,7 +23,7 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 			foreach($stylesheets as $stylesheet)
 			{
 				if(!is_array($stylesheet))
-				    $stylesheet['stylesheet'] = $stylesheet;
+					$stylesheet['stylesheet'] = $stylesheet;
 
 				// Needed to cache the stylesheet
 				$orig = $stylesheet['stylesheet'];
@@ -32,7 +32,7 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 				$stylesheet = array_merge($stylesheet, $dstyle);
 
 				if(empty($stylesheet['cachefile']))
-				    $stylesheet['cachefile'] = $stylesheet['name'];
+					$stylesheet['cachefile'] = $stylesheet['name'];
 
 				$db->insert_query("themestylesheets", $stylesheetarray);
 
@@ -46,7 +46,48 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 
 	static function update($codename)
 	{
-		// TODO!
+		global $db, $mybb;
+
+		require JB_PATH."{$codename}/install/stylesheets.php";
+
+		// Settings
+		if(!empty($stylesheets))
+		{
+			require_once MYBB_ROOT.$mybb->config['admin_dir']."/inc/functions_themes.php";
+
+			$dstyle = array(
+				"name"			=> "{$codename}.css",
+				"tid"			=> 1, // Master Theme
+				"attachedto"	=> "",
+				"lastmodified"	=> TIME_NOW,
+			);
+
+			foreach($stylesheets as $stylesheet)
+			{
+				if(!is_array($stylesheet))
+					$stylesheet['stylesheet'] = $stylesheet;
+
+				$stylesheet = array_merge($stylesheet, $dstyle);
+
+				$query = $db->simple_select("themestylesheets", "name", "name='".$db->escape_string($stylesheet['name'])."'");
+				if($db->num_rows($query) == 0)
+				{
+					// Needed to cache the stylesheet
+					$orig = $stylesheet['stylesheet'];
+					$stylesheet['stylesheet'] = $db->escape_string($orig);
+	
+					if(empty($stylesheet['cachefile']))
+						$stylesheet['cachefile'] = $stylesheet['name'];
+	
+					$db->insert_query("themestylesheets", $stylesheetarray);
+	
+					// Cache stylesheet
+					cache_stylesheet($stylesheet['tid'], $stylesheet['cachefile'], $orig);
+				}
+			}
+			// Rebuild lists just in case
+			update_theme_stylesheet_list(1, false, true);
+		}
 	}
 
 	static function uninstall($codename)
@@ -65,7 +106,7 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 			foreach($stylesheets as $stylesheet)
 			{
 				if(!is_array($stylesheet))
-				    $names[] = $db->escape_string("{$codename}.css");
+					$names[] = $db->escape_string("{$codename}.css");
 				else
 					$names[] = $db->escape_string($stylesheet['name']);
 			}
