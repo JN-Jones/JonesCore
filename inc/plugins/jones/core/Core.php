@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.4";
+	private static $version = "0.5 dev 1";
 
 	// Singleton
 	private static $instance = null;
@@ -28,6 +28,9 @@ class JB_Core
 
 		// Register our autoloader
 		spl_autoload_register(array($this, 'loadClass'));
+
+		// Include our short helper functions
+		require_once JB_INCLUDES."helpers.php";
 
 		// Initialize our MyAlerts bridge
 		JB_Alerts::init();
@@ -326,14 +329,4 @@ class JB_Core
 		if(file_exists($path))
 			return $path;
 	}
-}
-
-// Shortcuts for the escape functions - hopefully nobody else likes short names :D
-function e($string)
-{
-	return JB_Helpers::escapeOutput($string);
-}
-function dbe($string)
-{
-	return JB_Helpers::escapeDatabase($string);
 }
