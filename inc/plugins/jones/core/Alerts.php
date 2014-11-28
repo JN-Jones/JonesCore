@@ -8,7 +8,7 @@ class JB_Alerts
 
 	public static function init()
 	{
-		global $plugins, $mybb;
+		global $plugins;
 
 		if(!static::isInstalled())
 		{
@@ -20,14 +20,17 @@ class JB_Alerts
 		if(!static::isActivated())
 			return;
 
-		if($mybb->user['uid'] > 0)
-			// Need to do this after MyAlerts created the managers (on global_start)
-			$plugins->add_hook("global_start", array("JB_Alerts", "registerFormatters"), 11);
+		// Need to do this after MyAlerts created the managers (on global_start)
+		$plugins->add_hook("global_start", array("JB_Alerts", "registerFormatters"), 11);
 	}
 
 	public static function registerFormatters()
 	{
 		global $mybb, $lang;
+
+		// Formatters aren't registered for guests. However we can't add that check before the add_hook call as the session isn't loaded then
+		if($mybb->user['uid'] == 0)
+			return;
 
 		// Loop through all types and register the correct formatter
 		foreach(static::getTypes() as $codename => $types)
