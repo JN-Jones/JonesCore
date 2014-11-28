@@ -28,7 +28,7 @@ class JB_Core
 
 		// Register our autoloader
 		spl_autoload_register(array($this, 'loadClass'));
-		
+
 		// Initialize our MyAlerts bridge
 		JB_Alerts::init();
 

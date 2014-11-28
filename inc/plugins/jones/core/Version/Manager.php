@@ -12,7 +12,7 @@ abstract class JB_Version_Manager
 		{
 			if(version_compare($version, $from, ">"))
 			{
-		    	$version = str_replace(array(".", " ", "_"), "", $version);
+				$version = JB_Helpers::createFourDigitVersion($version);
 				$updater = "JB_{$codename}_Version_V{$version}";
 
     			if(class_exists($updater))

@@ -85,4 +85,44 @@ class JB_Helpers
 			$string = my_serialize($string);
 		return $db->escape_string($string);
 	}
+
+	public static function getVersion($codename, $doCache=true)
+	{
+		// First look whether the version is in our cache
+		if($doCache === true)
+		{
+			global $cache;
+
+			$jb = $cache->read("jb_plugins");
+			if(isset($jb[$codename]))
+				return $jb[$codename];
+		}
+
+		if(!file_exists(MYBB_ROOT."inc/plugins/{$codename}.php"))
+			return false;
+
+		require_once MYBB_ROOT."inc/plugins/{$codename}.php";
+
+		$func = $codename."_info";
+		if(!function_exists($func))
+			return false;
+
+		$info = $func();
+		if(!isset($info['version']))
+			return false;
+		return $info['version'];
+	}
+
+	public static function createFourDigitVersion($version)
+	{
+		$version = str_replace(array(".", " ", "_"), "", $version);
+		if(strlen($version) == 1)
+			return $version."000";
+		elseif(strlen($version) == 2)
+			return $version."00";
+		elseif(strlen($version) == 3)
+			return $version."0";
+		else
+			return substr($version, 0, 4);
+	}
 }
