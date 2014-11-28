@@ -17,9 +17,7 @@ class JB_Installer_Alerts extends JB_Installer_Base
 			foreach($alerts as $alert)
 			{
 				// Don't enable it - will be done on activation
-				$alertType = new MybbStuff_MyAlerts_Entity_AlertType();
-				$alertType->setCode("JB_{$codename}_{$alert}");
-				$alertType->setEnabled(false);
+				$alertType = (new MybbStuff_MyAlerts_Entity_AlertType())->setCode("JB_{$codename}_{$alert}")->setEnabled(false);
 				$manager->add($alertType);
 			}
 		}

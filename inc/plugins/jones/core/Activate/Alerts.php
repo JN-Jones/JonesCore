@@ -16,8 +16,7 @@ class JB_Activate_Alerts extends JB_Activate_Base
 			$updated = array();
 			foreach($alerts as $alert)
 			{
-				$type = $manager->getByCode("JB_{$codename}_{$alert}");
-				$type->setEnabled(true);
+				$type = $manager->getByCode("JB_{$codename}_{$alert}")->setEnabled(true);
 				$updated[] = $type;
 			}
 			$manager->updateAlertTypes($updated);
@@ -39,8 +38,7 @@ class JB_Activate_Alerts extends JB_Activate_Base
 			$updated = array();
 			foreach($alerts as $alert)
 			{
-				$type = $manager->getByCode("JB_{$codename}_{$alert}");
-				$type->setEnabled(false);
+				$type = $manager->getByCode("JB_{$codename}_{$alert}")->setEnabled(false);
 				$updated[] = $type;
 			}
 			$manager->updateAlertTypes($updated);
