@@ -8,10 +8,10 @@ class JB_Activate_Alerts extends JB_Activate_Base
 
 		require JB_PATH."{$codename}/install/alerts.php";
 
+		if(!empty($alerts))
 		{
-			$manager = $GLOBALS['mybbstuff_myalerts_alert_type_manager'];
-			if($manager == null)
-				$manager = new MybbStuff_MyAlerts_AlertTypeManager($db, $cache);
+			// Calling createInstance to make sure we have an instance
+			$manager = MybbStuff_MyAlerts_AlertTypeManager::createInstance($db, $cache);
 
 			$updated = array();
 			foreach($alerts as $alert)
@@ -31,9 +31,8 @@ class JB_Activate_Alerts extends JB_Activate_Base
 
 		if(!empty($alerts))
 		{
-			$manager = $GLOBALS['mybbstuff_myalerts_alert_type_manager'];
-			if($manager == null)
-				$manager = new MybbStuff_MyAlerts_AlertTypeManager($db, $cache);
+			// Calling createInstance to make sure we have an instance
+			$manager = MybbStuff_MyAlerts_AlertTypeManager::createInstance($db, $cache);
 
 			$updated = array();
 			foreach($alerts as $alert)

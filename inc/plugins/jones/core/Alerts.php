@@ -50,7 +50,7 @@ class JB_Alerts
 				{
 					$formatter = new JB_Alerts_BaseFormatter($mybb, $lang, "JB_{$codename}_{$type}");
 				}
-				$GLOBALS['mybbstuff_myalerts_alert_formatter_manager']->registerFormatter($formatter);
+				MybbStuff_MyAlerts_AlertFormatterManager::getInstance()->registerFormatter($formatter);
 			}
 		}
 	}
@@ -62,7 +62,7 @@ class JB_Alerts
 			return;
 
 		$name = "JB_{$codename}_{$alert}";
-		$type = $GLOBALS['mybbstuff_myalerts_alert_type_manager']->getByCode($name);
+		$type = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode($name);
 		if($type == null)
 			return;
 
@@ -84,7 +84,7 @@ class JB_Alerts
 				else
 					$alert->setFromUser(get_user($from));
 			}
-			$GLOBALS['mybbstuff_myalerts_alert_manager']->addAlert($alert);
+			MybbStuff_MyAlerts_AlertManager::getInstance()->addAlert($alert);
 		}
 	}
 
