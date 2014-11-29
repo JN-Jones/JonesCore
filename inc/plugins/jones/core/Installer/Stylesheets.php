@@ -27,14 +27,13 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 
 				// Needed to cache the stylesheet
 				$orig = $stylesheet['stylesheet'];
-				$stylesheet['stylesheet'] = $db->escape_string($orig);
 
 				$stylesheet = array_merge($stylesheet, $dstyle);
 
 				if(empty($stylesheet['cachefile']))
 					$stylesheet['cachefile'] = $stylesheet['name'];
 
-				$db->insert_query("themestylesheets", $stylesheetarray);
+				$db->insert_query("themestylesheets", dbe($stylesheet));
 
 				// Cache stylesheet
 				cache_stylesheet($stylesheet['tid'], $stylesheet['cachefile'], $orig);
@@ -69,17 +68,16 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 
 				$stylesheet = array_merge($stylesheet, $dstyle);
 
-				$query = $db->simple_select("themestylesheets", "name", "name='".$db->escape_string($stylesheet['name'])."'");
+				$query = $db->simple_select("themestylesheets", "name", "name='".dbe($stylesheet['name'])."'");
 				if($db->num_rows($query) == 0)
 				{
 					// Needed to cache the stylesheet
 					$orig = $stylesheet['stylesheet'];
-					$stylesheet['stylesheet'] = $db->escape_string($orig);
 	
 					if(empty($stylesheet['cachefile']))
 						$stylesheet['cachefile'] = $stylesheet['name'];
 	
-					$db->insert_query("themestylesheets", $stylesheetarray);
+					$db->insert_query("themestylesheets", dbe($stylesheet));
 	
 					// Cache stylesheet
 					cache_stylesheet($stylesheet['tid'], $stylesheet['cachefile'], $orig);
@@ -106,9 +104,9 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 			foreach($stylesheets as $stylesheet)
 			{
 				if(!is_array($stylesheet))
-					$names[] = $db->escape_string("{$codename}.css");
+					$names[] = dbe("{$codename}.css");
 				else
-					$names[] = $db->escape_string($stylesheet['name']);
+					$names[] = dbe($stylesheet['name']);
 			}
 
 			$names = array_unique($names);

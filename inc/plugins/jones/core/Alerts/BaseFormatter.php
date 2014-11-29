@@ -23,7 +23,7 @@ class JB_Alerts_BaseFormatter extends MybbStuff_MyAlerts_Formatter_AbstractForma
 				$outputAlert['from_user_profilelink'],
 				$outputAlert['dateline'],
 				$link,
-				htmlspecialchars_uni($extra['lang_data'])
+				e($extra['lang_data'])
 			);
 		}
 		else

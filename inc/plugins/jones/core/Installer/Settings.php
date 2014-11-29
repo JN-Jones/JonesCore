@@ -17,7 +17,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 				"name"			=> $codename,
 				"isdefault"		=> "0",
 			);
-			$gid = $db->insert_query("settinggroups", $group);
+			$gid = $db->insert_query("settinggroups", dbe($group));
 		}
 
 		// We need a gid to insert settings
@@ -37,7 +37,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 			{
 				$setting['disporder'] = $disporder;
 				$setting['gid'] = $gid;
-				$db->insert_query("settings", $setting);
+				$db->insert_query("settings", dbe($setting));
 			}
 		}
 
@@ -52,7 +52,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 		require JB_PATH."{$codename}/install/settings.php";
 
 		// Settings Group
-		$query = $db->simple_select("settinggroups", "gid", "name='{$codename}'");
+		$query = $db->simple_select("settinggroups", "gid", "name='".dbe($codename)."'");
 		if(!empty($settingsgroup) && $db->num_rows($query) == 0)
 		{
 			$group = array(
@@ -61,7 +61,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 				"name"			=> $codename,
 				"isdefault"		=> "0",
 			);
-			$gid = $db->insert_query("settinggroups", $group);
+			$gid = $db->insert_query("settinggroups", dbe($group));
 		}
 		else if($db->num_rows($query) == 1)
 		{
@@ -84,12 +84,12 @@ class JB_Installer_Settings extends JB_Installer_Base
 		{
 			foreach($settings as $disporder => $setting)
 			{
-				$query = $db->simple_select("settings", "name", "name='".$db->escape_string($setting['name'])."'");
+				$query = $db->simple_select("settings", "name", "name='".dbe($setting['name'])."'");
 				if($db->num_rows($query) == 0)
 				{
 					$setting['disporder'] = $disporder;
 					$setting['gid'] = $gid;
-					$db->insert_query("settings", $setting);
+					$db->insert_query("settings", dbe($setting));
 				}
 			}
 		}
@@ -103,7 +103,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 		global $db;
 
 		// Try fetchnig the gid
-		$query = $db->simple_select("settinggroups", "gid", "name='{$codename}'");
+		$query = $db->simple_select("settinggroups", "gid", "name='".dbe($codename)."'");
 		if($db->num_rows($query) > 0)
 		{
 			// Lucky us, everything is in this group, delete it!
@@ -119,7 +119,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 			{
 				foreach($settings as $setting)
 				{
-					$db->delete_query("settings", "name='".$db->escape_string($setting['name'])."'");
+					$db->delete_query("settings", "name='".dbe($setting['name'])."'");
 				}
 			}
 		}

@@ -25,7 +25,7 @@ class JB_Installer_Tasks extends JB_Installer_Base
 			{
 				$task = array_merge($dtask, $task);
 				$task['nextrun'] = fetch_next_run($task);
-				$db->insert_query("tasks", $new_task);
+				$db->insert_query("tasks", dbe($new_task));
 			}
 		}
 	}
@@ -53,11 +53,11 @@ class JB_Installer_Tasks extends JB_Installer_Base
 			{
 				$task = array_merge($dtask, $task);
 
-				$query = $db->simple_select("tasks", "file", "file='".$db->escape_string($task['file'])."'");
+				$query = $db->simple_select("tasks", "file", "file='".dbe($task['file'])."'");
 				if($db->num_rows($query) == 0)
 				{
 					$task['nextrun'] = fetch_next_run($task);
-					$db->insert_query("tasks", $new_task);
+					$db->insert_query("tasks", dbe($new_task));
 				}
 			}
 		}
@@ -74,9 +74,9 @@ class JB_Installer_Tasks extends JB_Installer_Base
 			foreach($tasks as $task)
 			{
 				if(isset($task['file']))
-				    $db->delete_query("tasks", "file='{$task['file']}'");
+					$db->delete_query("tasks", "file='".dbe($task['file'])."'");
 				else
-					$db->delete_query("tasks", "file='{$codename}'");
+					$db->delete_query("tasks", "file='".dbe($codename)."'");
 			}
 		}
 	}

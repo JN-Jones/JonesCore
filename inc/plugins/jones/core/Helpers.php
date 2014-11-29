@@ -86,6 +86,21 @@ class JB_Helpers
 		return $db->escape_string($string);
 	}
 
+	public static function escapeDatabaseArray($array)
+	{
+		global $db;
+
+		foreach($array as &$el)
+		{
+			if(is_array($el))
+				$el = static::escapeDatabaseArray($el);
+			else
+				$el = static::escapeDatabase($el);
+		}
+
+		return $array;
+	}
+
 	public static function getVersion($codename, $doCache=true)
 	{
 		// First look whether the version is in our cache
