@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.5 dev 2";
+	private static $version = "0.5 dev 3";
 
 	// Singleton
 	private static $instance = null;
@@ -319,12 +319,12 @@ class JB_Core
 			$last = $classParts[$el-2];
 
 			if(strtolower($last) != "version" && strtolower($last) != "wio")
-				$extra = "/classes";
+				$extra = "classes/";
 		}
 
 		$className = array_pop($classParts);
 
-		$path = JB_PATH.$package."/".implode("/", $classParts).$extra."/".$className.".php";
+		$path = JB_PATH.$package."/".$extra.implode("/", $classParts)."/".$className.".php";
 
 		if(file_exists($path))
 			return $path;

@@ -157,9 +157,11 @@ class JB_Alerts
 			return false;
 		}
 
-		// Though we don't use $plugins ourselves we need to globalize it here - otherwise the required myalerts file may throw an error
+		// Don't add myalerts hooks here! If it's installed they were already but if it isn't we'd create a lot of issues
 		global $plugins;
+		$hooks = $plugins->hooks;
 		require_once MYBB_ROOT."inc/plugins/myalerts.php";
+		$plugins->hooks = $hooks;
 
 		$func = "myalerts_is_installed";
 
