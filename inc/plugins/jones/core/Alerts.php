@@ -99,6 +99,8 @@ class JB_Alerts
 		$active = $cache->read("plugins");
 		$active = $active['active'];
 
+		static::$types = array();
+
 		foreach(array_keys($jb_plugins) as $codename)
 		{
 			// Only activated plugins!
@@ -161,7 +163,6 @@ class JB_Alerts
 		global $plugins;
 		$hooks = $plugins->hooks;
 		require_once MYBB_ROOT."inc/plugins/myalerts.php";
-		$plugins->hooks = $hooks;
 
 		$func = "myalerts_is_installed";
 
@@ -169,10 +170,13 @@ class JB_Alerts
 		if(!function_exists($func))
 		{
 			static::$installed = false;
+			$plugins->hooks = $hooks;
 			return false;
 		}
 
 		static::$installed = $func();
+		if(!static::$installed)
+			$plugins->hooks = $hooks;
 		return static::$installed;
 	}
 
