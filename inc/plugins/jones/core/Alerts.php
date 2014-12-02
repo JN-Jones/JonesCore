@@ -192,14 +192,7 @@ class JB_Alerts
 			return false;
 		}
 
-		global $cache;
-
-		$plugins = $cache->read("plugins");
-		$active = $plugins["active"];
-
-		static::$activated = false;
-		if(in_array("myalerts", $active))
-			static::$activated = true;
+		static::$activated = myalerts_is_activated();
 
 		return static::$activated;
 	}
