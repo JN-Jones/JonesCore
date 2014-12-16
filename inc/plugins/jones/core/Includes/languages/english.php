@@ -10,6 +10,7 @@ $jb_lang['english_run'] = "Please run an upgrade.";
 $jb_lang['english_updated_core'] = "JonesCore was updated successfully";
 $jb_lang['english_updated_plugin'] = "The specified plugin was successfully updated to the latest version";
 
+$jb_lang['english_requirement_core'] = "Your Core Installation is too old to install this plugin. Please update to the latest version.";
 $jb_lang['english_requirement_mybb'] = "Your MyBB Installation is too old to install this plugin. Please update to the latest version.";
 $jb_lang['english_requirement_php'] = "Your PHP Installation is too old. Unfortunately this means that this plugin won't work on your server";
 

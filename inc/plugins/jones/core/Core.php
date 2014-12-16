@@ -71,9 +71,19 @@ class JB_Core
 		return array_merge($info, $generalInfo);
 	}
 
-	public function install($codename, $mybb_minimum = false, $php_minimum = "5.3")
+	public function install($codename, $core_minimum = false, $mybb_minimum = false, $php_minimum = "5.3")
 	{
 		global $cache, $mybb;
+
+		if($core_minimum !== false)
+		{
+			if(version_compare(static::$version, $core_minimum, "<"))
+			{
+				// Core is too old
+				flash_message(JB_Lang::get("requirement_core"), 'error');
+				admin_redirect('index.php?module=config-plugins');
+			}
+		}
 
 		if($mybb_minimum !== false)
 		{
