@@ -128,9 +128,14 @@ class JB_Helpers
 		return $info['version'];
 	}
 
+	public static function createNiceVersion($version)
+	{
+		return str_replace(array(".", " ", "_"), "", $version);
+	}
+
 	public static function createFourDigitVersion($version)
 	{
-		$version = str_replace(array(".", " ", "_"), "", $version);
+		$version = static::createNiceVersion($version);
 		if(strlen($version) == 1)
 			return $version."000";
 		elseif(strlen($version) == 2)
