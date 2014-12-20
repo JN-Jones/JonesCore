@@ -8,14 +8,14 @@ abstract class JB_Version_Manager
 	public static function run($from)
 	{
 		$codename = static::$codename;
-    	foreach(static::$versions as $version)
+		foreach(static::$versions as $version)
 		{
 			if(version_compare($version, $from, ">"))
 			{
-				$version = JB_Helpers::createFourDigitVersion($version);
+				$version = JB_Helpers::createNiceVersion($version);
 				$updater = "JB_{$codename}_Version_V{$version}";
 
-    			if(class_exists($updater))
+				if(class_exists($updater))
 					$updater::execute();
 			}
 		}

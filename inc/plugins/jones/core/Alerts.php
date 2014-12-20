@@ -50,7 +50,7 @@ class JB_Alerts
 				{
 					$formatter = new JB_Alerts_BaseFormatter($mybb, $lang, "JB_{$codename}_{$type}");
 				}
-				$GLOBALS['mybbstuff_myalerts_alert_formatter_manager']->registerFormatter($formatter);
+				MybbStuff_MyAlerts_AlertFormatterManager::getInstance()->registerFormatter($formatter);
 			}
 		}
 	}
@@ -62,7 +62,7 @@ class JB_Alerts
 			return;
 
 		$name = "JB_{$codename}_{$alert}";
-		$type = $GLOBALS['mybbstuff_myalerts_alert_type_manager']->getByCode($name);
+		$type = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode($name);
 		if($type == null)
 			return;
 
@@ -84,7 +84,7 @@ class JB_Alerts
 				else
 					$alert->setFromUser(get_user($from));
 			}
-			$GLOBALS['mybbstuff_myalerts_alert_manager']->addAlert($alert);
+			MybbStuff_MyAlerts_AlertManager::getInstance()->addAlert($alert);
 		}
 	}
 
@@ -98,6 +98,8 @@ class JB_Alerts
 		$jb_plugins = $cache->read("jb_plugins");
 		$active = $cache->read("plugins");
 		$active = $active['active'];
+
+		static::$types = array();
 
 		foreach(array_keys($jb_plugins) as $codename)
 		{
@@ -157,8 +159,9 @@ class JB_Alerts
 			return false;
 		}
 
-		// Though we don't use $plugins ourselves we need to globalize it here - otherwise the required myalerts file may throw an error
+		// Don't add myalerts hooks here! If it's installed they were already but if it isn't we'd create a lot of issues
 		global $plugins;
+		$hooks = $plugins->hooks;
 		require_once MYBB_ROOT."inc/plugins/myalerts.php";
 
 		$func = "myalerts_is_installed";
@@ -167,10 +170,13 @@ class JB_Alerts
 		if(!function_exists($func))
 		{
 			static::$installed = false;
+			$plugins->hooks = $hooks;
 			return false;
 		}
 
 		static::$installed = $func();
+		if(!static::$installed)
+			$plugins->hooks = $hooks;
 		return static::$installed;
 	}
 
@@ -186,14 +192,7 @@ class JB_Alerts
 			return false;
 		}
 
-		global $cache;
-
-		$plugins = $cache->read("plugins");
-		$active = $plugins["active"];
-
-		static::$activated = false;
-		if(in_array("myalerts", $active))
-			static::$activated = true;
+		static::$activated = myalerts_is_activated();
 
 		return static::$activated;
 	}

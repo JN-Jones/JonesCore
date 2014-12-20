@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.4";
+	private static $version = "0.5";
 
 	// Singleton
 	private static $instance = null;
@@ -28,6 +28,9 @@ class JB_Core
 
 		// Register our autoloader
 		spl_autoload_register(array($this, 'loadClass'));
+
+		// Include our short helper functions
+		require_once JB_INCLUDES."helpers.php";
 
 		// Initialize our MyAlerts bridge
 		JB_Alerts::init();
@@ -68,9 +71,19 @@ class JB_Core
 		return array_merge($info, $generalInfo);
 	}
 
-	public function install($codename, $mybb_minimum = false, $php_minimum = "5.3")
+	public function install($codename, $core_minimum = false, $mybb_minimum = false, $php_minimum = "5.3")
 	{
 		global $cache, $mybb;
+
+		if($core_minimum !== false)
+		{
+			if(version_compare(static::$version, $core_minimum, "<"))
+			{
+				// Core is too old
+				flash_message(JB_Lang::get("requirement_core"), 'error');
+				admin_redirect('index.php?module=config-plugins');
+			}
+		}
 
 		if($mybb_minimum !== false)
 		{
@@ -316,24 +329,14 @@ class JB_Core
 			$last = $classParts[$el-2];
 
 			if(strtolower($last) != "version" && strtolower($last) != "wio")
-				$extra = "/classes";
+				$extra = "classes/";
 		}
 
 		$className = array_pop($classParts);
 
-		$path = JB_PATH.$package."/".implode("/", $classParts).$extra."/".$className.".php";
+		$path = JB_PATH.$package."/".$extra.implode("/", $classParts)."/".$className.".php";
 
 		if(file_exists($path))
 			return $path;
 	}
-}
-
-// Shortcuts for the escape functions - hopefully nobody else likes short names :D
-function e($string)
-{
-	return JB_Helpers::escapeOutput($string);
-}
-function dbe($string)
-{
-	return JB_Helpers::escapeDatabase($string);
 }

@@ -94,18 +94,18 @@ abstract class JB_Classes_Base
 			return false;
 
 		// Escape everything
-		$data = array_map(array("JB_Helpers", "escapeDatabase"), $this->data);
+		$data = dbe($this->data);
 
 		// Not existant -> insert
 		if($this->data['id'] == -1)
 		{
+			unset($data['id']);
 			static::runHook("save", $data);
 
 			if(static::$timestamps)
 				$this->data['dateline'] = $data['dateline'] = TIME_NOW;
 			if(static::$user && empty($this->data['uid']))
 				$this->data['uid'] = $data['uid'] = $mybb->user['uid'];
-			unset($data['id']);
 			$this->data['id'] = $db->insert_query(static::$table, $data);
 		}
 		// exists -> update

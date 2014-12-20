@@ -15,7 +15,7 @@ class JB_Installer_Templates extends JB_Installer_Base
 				"prefix"	=> $codename,
 				"title"		=> $templateset,
 			);
-			$db->insert_query("templategroups", $templategroup);
+			$db->insert_query("templategroups", dbe($templategroup));
 		}
 	
 		// Templates
@@ -25,10 +25,8 @@ class JB_Installer_Templates extends JB_Installer_Base
 			foreach($templates as $template)
 			{
 				$template['sid'] = "-2"; // Master Theme
-				$template['title'] = $db->escape_string($template['title']);
-				$template['template'] = $db->escape_string($template['template']);
-				$template['version'] = (int)$version;
-				$db->insert_query("templates", $template);
+				$template['version'] = $version;
+				$db->insert_query("templates", dbe($template));
 			}
 		}
 	}
@@ -40,14 +38,14 @@ class JB_Installer_Templates extends JB_Installer_Base
 		require_once JB_PATH."{$codename}/install/templates.php";
 
 		// Reset the template group
-		$db->delete_query("templategroups", "prefix='{$codename}'");
+		$db->delete_query("templategroups", "prefix='".dbe($codename)."'");
 		if(!empty($templateset))
 		{
 			$templategroup = array(
 				"prefix"	=> $codename,
 				"title"		=> $templateset,
 			);
-			$db->insert_query("templategroups", $templategroup);
+			$db->insert_query("templategroups", dbe($templategroup));
 		}
 	
 		// Templates
@@ -56,11 +54,9 @@ class JB_Installer_Templates extends JB_Installer_Base
 			$version = JB_Helpers::createFourDigitVersion(JB_Helpers::getVersion($codename));
 			foreach($templates as $template)
 			{
-				$query = $db->simple_select("templates", "tid", "sid='-2' AND title='".$db->escape_string($template['title'])."'");
+				$query = $db->simple_select("templates", "tid", "sid='-2' AND title='".dbe($template['title'])."'");
 				$template['sid'] = "-2"; // Master Theme
-				$template['template'] = $db->escape_string($template['template']);
-				$template['title'] = $db->escape_string($template['title']);
-				$template['version'] = (int)$version;
+				$template['version'] = $version;
 
 				$oldtemp = $db->fetch_array($query);
 				if($oldtemp['tid'])
@@ -70,11 +66,11 @@ class JB_Installer_Templates extends JB_Installer_Base
 						'version' => $version,
 						'dateline' => TIME_NOW
 					);
-					$db->update_query("templates", $update_array, "title='".$db->escape_string($templatename)."' AND sid='-2'");
+					$db->update_query("templates", dbe($update_array), "title='".dbe($templatename)."' AND sid='-2'");
 				}
 				else
 				{
-					$db->insert_query("templates", $template);
+					$db->insert_query("templates", dbe($template));
 				}
 			}
 		}
@@ -87,14 +83,14 @@ class JB_Installer_Templates extends JB_Installer_Base
 		require_once JB_PATH."{$codename}/install/templates.php";
 
 		// Template Group
-		$db->delete_query("templategroups", "prefix='{$codename}'");
+		$db->delete_query("templategroups", "prefix='".dbe($codename)."'");
 
 		// Templates
 		if(!empty($templates))
 		{
 			foreach($templates as $template)
 			{
-				$db->delete_query("templates", "title='".$template['title']."'");
+				$db->delete_query("templates", "title='".dbe($template['title'])."'");
 			}
 		}
 	}
