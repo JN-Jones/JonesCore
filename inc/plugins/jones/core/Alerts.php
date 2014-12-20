@@ -110,7 +110,8 @@ class JB_Alerts
 			if(!file_exists(JB_Packages::i()->getPath($codename)."install/alerts.php"))
 				continue;
 
-			require_once JB_Packages::i()->getPath($codename)."install/alerts.php";
+			$alerts = array();
+			require JB_Packages::i()->getPath($codename)."install/alerts.php";
 
 			if(!empty($alerts))
 			{
