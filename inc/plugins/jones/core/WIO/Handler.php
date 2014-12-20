@@ -77,7 +77,7 @@ class JB_WIO_Handler
 			if(!in_array($codename, $active))
 				continue;
 
-			$handler = "JB_{$codename}_WIO_Handler";
+			$handler = JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_WIO_Handler";
 			if(class_exists($handler))
 			{
 				$handler::init();

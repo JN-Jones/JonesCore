@@ -113,10 +113,10 @@ class JB_Helpers
 				return $jb[$codename];
 		}
 
-		if(!file_exists(MYBB_ROOT."inc/plugins/{$codename}.php"))
+		if(!file_exists(JB_PLUGINS."{$codename}.php"))
 			return false;
 
-		require_once MYBB_ROOT."inc/plugins/{$codename}.php";
+		require_once JB_PLUGINS."{$codename}.php";
 
 		$func = $codename."_info";
 		if(!function_exists($func))

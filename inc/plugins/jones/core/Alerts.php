@@ -40,15 +40,15 @@ class JB_Alerts
 			foreach($types as $type)
 			{
 				// Do we have a custom formatter for this type?
-				if(class_exists("JB_{$codename}_Alerts_{$type}Formatter"))
+				if(class_exists(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_Alerts_{$type}Formatter"))
 				{
-					$formatter = "JB_{$codename}_Alerts_{$type}Formatter";
-					$formatter = new $formatter($mybb, $lang, "JB_{$codename}_{$type}");
+					$formatter = JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_Alerts_{$type}Formatter";
+					$formatter = new $formatter($mybb, $lang, JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$type}");
 				}
 				// Otherweise use our base formatter
 				else
 				{
-					$formatter = new JB_Alerts_BaseFormatter($mybb, $lang, "JB_{$codename}_{$type}");
+					$formatter = new JB_Alerts_BaseFormatter($mybb, $lang, JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$type}");
 				}
 				MybbStuff_MyAlerts_AlertFormatterManager::getInstance()->registerFormatter($formatter);
 			}
@@ -61,7 +61,7 @@ class JB_Alerts
 		if(!static::isActivated())
 			return;
 
-		$name = "JB_{$codename}_{$alert}";
+		$name = JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}";
 		$type = MybbStuff_MyAlerts_AlertTypeManager::getInstance()->getByCode($name);
 		if($type == null)
 			return;
@@ -107,10 +107,10 @@ class JB_Alerts
 			if(!in_array($codename, $active))
 				continue;
 
-			if(!file_exists(JB_PATH."{$codename}/install/alerts.php"))
+			if(!file_exists(JB_Packages::i()->getPath($codename)."install/alerts.php"))
 				continue;
 
-			require_once JB_PATH."{$codename}/install/alerts.php";
+			require_once JB_Packages::i()->getPath($codename)."install/alerts.php";
 
 			if(!empty($alerts))
 			{
@@ -153,7 +153,7 @@ class JB_Alerts
 			return static::$installed;
 
 		// File not uploaded? -> Not installed
-		if(!file_exists(MYBB_ROOT."inc/plugins/myalerts.php"))
+		if(!file_exists(JB_PLUGINS."myalerts.php"))
 		{
 			static::$installed = false;
 			return false;
@@ -162,7 +162,7 @@ class JB_Alerts
 		// Don't add myalerts hooks here! If it's installed they were already but if it isn't we'd create a lot of issues
 		global $plugins;
 		$hooks = $plugins->hooks;
-		require_once MYBB_ROOT."inc/plugins/myalerts.php";
+		require_once JB_PLUGINS."myalerts.php";
 
 		$func = "myalerts_is_installed";
 

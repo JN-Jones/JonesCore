@@ -64,6 +64,8 @@ abstract class JB_Classes_Base
 	{
 		global $db;
 
+		$id = (int)$id;
+
 		if(isset(static::$cache[$id]))
 			return static::$cache[$id];
 
@@ -79,7 +81,6 @@ abstract class JB_Classes_Base
 		static::$cache[$id] = $class;
 
 		return $class;
-
 	}
 
 	public abstract function validate($hard=true);

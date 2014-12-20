@@ -6,7 +6,7 @@ class JB_Installer_Templates extends JB_Installer_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/templates.php";
+		require_once JB_Packages::i()->getPath($codename)."install/templates.php";
 
 		if(!empty($templateset))
 		{
@@ -35,7 +35,7 @@ class JB_Installer_Templates extends JB_Installer_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/templates.php";
+		require_once JB_Packages::i()->getPath($codename)."install/templates.php";
 
 		// Reset the template group
 		$db->delete_query("templategroups", "prefix='".dbe($codename)."'");
@@ -80,7 +80,7 @@ class JB_Installer_Templates extends JB_Installer_Base
 	{
 		global $db;
 
-		require_once JB_PATH."{$codename}/install/templates.php";
+		require_once JB_Packages::i()->getPath($codename)."install/templates.php";
 
 		// Template Group
 		$db->delete_query("templategroups", "prefix='".dbe($codename)."'");
@@ -97,6 +97,6 @@ class JB_Installer_Templates extends JB_Installer_Base
 
 	static function isNeeded($codename)
 	{
-		return file_exists(JB_PATH."{$codename}/install/templates.php");
+		return file_exists(JB_Packages::i()->getPath($codename)."install/templates.php");
 	}
 }

@@ -6,7 +6,7 @@ class JB_Installer_Alerts extends JB_Installer_Base
 	{
 		global $db, $cache;
 
-		require JB_PATH."{$codename}/install/alerts.php";
+		require JB_Packages::i()->getPath($codename)."install/alerts.php";
 
 		if(!empty($alerts))
 		{
@@ -16,7 +16,7 @@ class JB_Installer_Alerts extends JB_Installer_Base
 			foreach($alerts as $alert)
 			{
 				// Don't enable it - will be done on activation
-				$alertType = (new MybbStuff_MyAlerts_Entity_AlertType())->setCode("JB_{$codename}_{$alert}")->setEnabled(false);
+				$alertType = (new MybbStuff_MyAlerts_Entity_AlertType())->setCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}")->setEnabled(false);
 				$manager->add($alertType);
 			}
 		}
@@ -24,7 +24,7 @@ class JB_Installer_Alerts extends JB_Installer_Base
 
 	static function update($codename)
 	{
-		require JB_PATH."{$codename}/install/alerts.php";
+		require JB_Packages::i()->getPath($codename)."install/alerts.php";
 
 		if(!empty($alerts))
 		{
@@ -37,10 +37,10 @@ class JB_Installer_Alerts extends JB_Installer_Base
 
 			foreach($alerts as $alert)
 			{
-				$test = $manager->getByCode("JB_{$codename}_{$alert}");
+				$test = $manager->getByCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}");
 				if($test === null)
 				{
-					$alertType = (new MybbStuff_MyAlerts_Entity_AlertType())->setCode("JB_{$codename}_{$alert}")->setEnabled($activated);
+					$alertType = (new MybbStuff_MyAlerts_Entity_AlertType())->setCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}")->setEnabled($activated);
 					$manager->add($alertType);
 				}
 			}
@@ -51,7 +51,7 @@ class JB_Installer_Alerts extends JB_Installer_Base
 	{
 		global $db, $cache;
 
-		require JB_PATH."{$codename}/install/alerts.php";
+		require JB_Packages::i()->getPath($codename)."install/alerts.php";
 
 		if(!empty($alerts))
 		{
@@ -60,7 +60,7 @@ class JB_Installer_Alerts extends JB_Installer_Base
 
 			foreach($alerts as $alert)
 			{
-				$manager->deleteByCode("JB_{$codename}_{$alert}");
+				$manager->deleteByCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}");
 			}
 		}
 	}
@@ -71,6 +71,6 @@ class JB_Installer_Alerts extends JB_Installer_Base
 		if(!JB_Alerts::isInstalled())
 			return false;
 
-		return file_exists(JB_PATH."{$codename}/install/alerts.php");
+		return file_exists(JB_Packages::i()->getPath($codename)."install/alerts.php");
 	}
 }

@@ -21,7 +21,7 @@ class JB_AdminModules
 		if(empty($action))
 		    $action = "index";
 
-		$path = JB_PATH.$codename."/modules/admin/{$module}/";
+		$path = JB_Packages::i()->getPath($codename)."modules/admin/{$module}/";
 
 		// Unknown module - blank page
 		if(!file_exists($path."{$action}.php"))
