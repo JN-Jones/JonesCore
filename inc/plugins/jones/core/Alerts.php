@@ -88,6 +88,28 @@ class JB_Alerts
 		}
 	}
 
+	public static function triggerGroup($codename, $alert, $to, $extra=array(), $from=false)
+	{
+		// Nothing to do if MyAlerts is deactivated
+		if(!static::isActivated())
+			return;
+
+		if(!is_array($to))
+			$to = array($to);
+		$to = array_unique($to);
+
+		$users = array();
+		foreach($to as $gid)
+		{
+			$gusers = JB_Helpsers::getUsersInGroup($gid);
+			foreach($gusers as $user)
+				$users[] = $user['uid'];
+		}
+
+		// Now trigger the alert for all users. The trigger function will also handle duplicated users
+		static::triger($codenamek $alert, $users, $extra, $from);
+	}
+
 	public static function getTypes()
 	{
 		if(static::$types !== null)
