@@ -101,13 +101,13 @@ class JB_Alerts
 		$users = array();
 		foreach($to as $gid)
 		{
-			$gusers = JB_Helpsers::getUsersInGroup($gid);
+			$gusers = JB_Helpers::getUsersInGroup($gid);
 			foreach($gusers as $user)
 				$users[] = $user['uid'];
 		}
 
 		// Now trigger the alert for all users. The trigger function will also handle duplicated users
-		static::triger($codenamek $alert, $users, $extra, $from);
+		static::trigger($codename, $alert, $users, $extra, $from);
 	}
 
 	public static function getTypes()
