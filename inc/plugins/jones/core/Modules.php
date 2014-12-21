@@ -11,11 +11,11 @@ class JB_Modules
 		if($codename === false)
 			$codename = substr(THIS_SCRIPT, 0, -4);
 
-		if(!is_dir(JB_PATH.$codename."/modules/"))
+		if(!is_dir(JB_Packages::i()->getPath($codename)."modules/"))
 		    die($codename." is not modular");
 
 		$this->codename = $codename;
-		$this->path = JB_PATH.$codename."/modules/";
+		$this->path = JB_Packages::i()->getPath($codename)."modules/";
 		if($template === false)
 		    $this->template = $codename;
 		else
@@ -26,7 +26,7 @@ class JB_Modules
 	// Loads and runs our module
 	public function loadModule($module=false, $method="")
 	{
-		global $mybb, $templates, $lang, $headerinclude, $header, $errors, $write, $footer;
+		global $mybb, $templates, $lang, $headerinclude, $header, $errors, $write, $footer, $colspan, $masterlink, $theme;
 
 		if($module === false)
 			$module = $mybb->get_input('action');

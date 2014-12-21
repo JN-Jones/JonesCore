@@ -6,7 +6,7 @@ class JB_Activate_Alerts extends JB_Activate_Base
 	{
 		global $db, $cache;
 
-		require JB_PATH."{$codename}/install/alerts.php";
+		require JB_Packages::i()->getPath($codename)."install/alerts.php";
 
 		if(!empty($alerts))
 		{
@@ -16,7 +16,7 @@ class JB_Activate_Alerts extends JB_Activate_Base
 			$updated = array();
 			foreach($alerts as $alert)
 			{
-				$type = $manager->getByCode("JB_{$codename}_{$alert}")->setEnabled(true);
+				$type = $manager->getByCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}")->setEnabled(true);
 				$updated[] = $type;
 			}
 			$manager->updateAlertTypes($updated);
@@ -27,7 +27,7 @@ class JB_Activate_Alerts extends JB_Activate_Base
 	{
 		global $db, $cache;
 
-		require JB_PATH."{$codename}/install/alerts.php";
+		require JB_Packages::i()->getPath($codename)."install/alerts.php";
 
 		if(!empty($alerts))
 		{
@@ -37,7 +37,7 @@ class JB_Activate_Alerts extends JB_Activate_Base
 			$updated = array();
 			foreach($alerts as $alert)
 			{
-				$type = $manager->getByCode("JB_{$codename}_{$alert}")->setEnabled(false);
+				$type = $manager->getByCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}")->setEnabled(false);
 				$updated[] = $type;
 			}
 			$manager->updateAlertTypes($updated);
@@ -50,6 +50,6 @@ class JB_Activate_Alerts extends JB_Activate_Base
 		if(!JB_Alerts::isInstalled())
 			return false;
 
-		return file_exists(JB_PATH."{$codename}/install/alerts.php");
+		return file_exists(JB_Packages::i()->getPath($codename)."install/alerts.php");
 	}
 }

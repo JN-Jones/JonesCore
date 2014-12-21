@@ -6,7 +6,7 @@ class JB_Activate_Templates extends JB_Activate_Base
 	{
 		global $db;
 
-		require JB_PATH."{$codename}/install/template_edits.php";
+		require JB_Packages::i()->getPath($codename)."install/template_edits.php";
 
 		// Template Edits
 		if(!empty($edits))
@@ -27,7 +27,7 @@ class JB_Activate_Templates extends JB_Activate_Base
 	{
 		global $db;
 
-		require JB_PATH."{$codename}/install/template_edits.php";
+		require JB_Packages::i()->getPath($codename)."install/template_edits.php";
 
 		// Template Edits
 		if(!empty($edits))
@@ -46,6 +46,6 @@ class JB_Activate_Templates extends JB_Activate_Base
 
 	static function isNeeded($codename)
 	{
-		return file_exists(JB_PATH."{$codename}/install/template_edits.php");
+		return file_exists(JB_Packages::i()->getPath($codename)."install/template_edits.php");
 	}
 }

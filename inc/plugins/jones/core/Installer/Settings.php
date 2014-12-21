@@ -4,9 +4,9 @@ class JB_Installer_Settings extends JB_Installer_Base
 {
 	static function install($codename)
 	{
-		global $db;
+		global $db, $lang;
 
-		require JB_PATH."{$codename}/install/settings.php";
+		require JB_Packages::i()->getPath($codename)."install/settings.php";
 
 		// Settings Group
 		if(!empty($settingsgroup))
@@ -49,7 +49,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 	{
 		global $db;
 
-		require JB_PATH."{$codename}/install/settings.php";
+		require JB_Packages::i()->getPath($codename)."install/settings.php";
 
 		// Settings Group
 		$query = $db->simple_select("settinggroups", "gid", "name='".dbe($codename)."'");
@@ -114,7 +114,7 @@ class JB_Installer_Settings extends JB_Installer_Base
 		else
 		{
 			// We didn't have luck - need to loop through every setting and delete them
-			require JB_PATH."{$codename}/install/settings.php";
+			require JB_Packages::i()->getPath($codename)."install/settings.php";
 			if(!empty($settings))
 			{
 				foreach($settings as $setting)
@@ -130,6 +130,6 @@ class JB_Installer_Settings extends JB_Installer_Base
 
 	static function isNeeded($codename)
 	{
-		return file_exists(JB_PATH."{$codename}/install/settings.php");
+		return file_exists(JB_Packages::i()->getPath($codename)."install/settings.php");
 	}
 }

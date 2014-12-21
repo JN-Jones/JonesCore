@@ -6,7 +6,7 @@ class JB_Activate_Tasks extends JB_Activate_Base
 	{
 		global $db;
 
-		require JB_PATH."{$codename}/install/tasks.php";
+		require JB_Packages::i()->getPath($codename)."install/tasks.php";
 
 		if(!empty($tasks))
 		{
@@ -30,7 +30,7 @@ class JB_Activate_Tasks extends JB_Activate_Base
 	{
 		global $db;
 
-		require JB_PATH."{$codename}/install/tasks.php";
+		require JB_Packages::i()->getPath($codename)."install/tasks.php";
 
 		if(!empty($tasks))
 		{
@@ -52,6 +52,6 @@ class JB_Activate_Tasks extends JB_Activate_Base
 
 	static function isNeeded($codename)
 	{
-		return file_exists(JB_PATH."{$codename}/install/tasks.php");
+		return file_exists(JB_Packages::i()->getPath($codename)."install/tasks.php");
 	}
 }

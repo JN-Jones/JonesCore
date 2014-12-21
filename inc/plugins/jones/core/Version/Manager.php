@@ -13,7 +13,7 @@ abstract class JB_Version_Manager
 			if(version_compare($version, $from, ">"))
 			{
 				$version = JB_Helpers::createNiceVersion($version);
-				$updater = "JB_{$codename}_Version_V{$version}";
+				$updater = JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_Version_V{$version}";
 
 				if(class_exists($updater))
 					$updater::execute();

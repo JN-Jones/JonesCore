@@ -3,16 +3,16 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.5";
+	private static $version = "0.6";
 
 	// Singleton
 	private static $instance = null;
 	public static function getInstance()
 	{
-		if($instance === null)
-			$instance = new self();
+		if(static::$instance === null)
+			static::$instance = new self();
 
-		return $instance;
+		return static::$instance;
 	}
 	// Short it a bit
 	public static function i()
@@ -23,8 +23,12 @@ class JB_Core
 	private function __construct()
 	{
 		// Define some path constants
-		define(JB_PATH, MYBB_ROOT."inc/plugins/jones/");
+		define(JB_PLUGINS, MYBB_ROOT."inc/plugins/");
+		define(JB_PATH, JB_PLUGINS."jones/");
 		define(JB_INCLUDES, JB_PATH."core/includes/");
+
+		// We need to require our packages manager manually as the autoloader needs it
+		require_once JB_PATH."core/Packages.php";
 
 		// Register our autoloader
 		spl_autoload_register(array($this, 'loadClass'));
@@ -47,16 +51,9 @@ class JB_Core
 		$plugins->add_hook("build_friendly_wol_location_end", array("JB_WIO_Handler", "buildLink"));
 	}
 
-	public function getInfo($info)
+	public function getInfo($info, $overwrite=true)
 	{
 		global $cache;
-
-		// Insert some usefull information, eg overwrite author/website to make sure they're the same and display update notifications
-		$generalInfo = array(
-			"website"		=> "http://jonesboard.de/",
-			"author"		=> "Jones",
-			"authorsite"	=> "http://jonesboard.de/",
-		);
 
 		// Do we need an update?
 		$jb_plugins = $cache->read('jb_plugins');
@@ -68,7 +65,18 @@ class JB_Core
 			$info['description'] .= "<br /><b>".JB_Lang::get('update_plugin')."</b> <a href=\"index.php?module=config-plugins&action=jb_update&plugin={$info['codename']}\">".JB_Lang::get('run')."</a>";
 		}
 
-		return array_merge($info, $generalInfo);
+		if($overwrite === true)
+		{
+			// Insert some usefull information, eg overwrite author/website to make sure they're the same and display update notifications
+			$generalInfo = array(
+				"website"		=> "http://jonesboard.de/",
+				"author"		=> "Jones",
+				"authorsite"	=> "http://jonesboard.de/",
+			);
+
+			return array_merge($info, $generalInfo);
+		}
+		return $info;
 	}
 
 	public function install($codename, $core_minimum = false, $mybb_minimum = false, $php_minimum = "5.3")
@@ -118,7 +126,7 @@ class JB_Core
 		if(JB_Installer_Database::isNeeded($codename))
 			JB_Installer_Database::install($codename);
 
-		if(JB_Installer_Alerts::isNeeded($codename))
+    	if(JB_Installer_Alerts::isNeeded($codename))
 			JB_Installer_Alerts::install($codename);
 
 		// Update our versions cache
@@ -213,15 +221,15 @@ class JB_Core
 		$jb_plugins = $cache->read('jb_plugins');
 		$from_version = $jb_plugins[$codename];
 
-		$version_dir = JB_PATH.$codename."/version";
+		$version_dir = JB_Packages::i()->getPath($codename)."version";
 
 		if(is_dir($version_dir))
 		{
-			$version_manager = "JB_{$codename}_Version_Manager";
+			$version_manager = JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_Version_Manager";
 			$version_manager::run($from_version);
 		}
 
-		require_once MYBB_ROOT."inc/plugins/{$codename}.php";
+		require_once JB_PLUGINS."{$codename}.php";
 		$info = $codename."_info";
 		$info = $info();
 		$jb_plugins[$codename] = $info['version'];
@@ -271,10 +279,10 @@ class JB_Core
 				continue;
 
 			// No template edits? Nice!
-			if(!file_exists(JB_PATH."{$codename}/install/template_edits.php"))
+			if(!file_exists(JB_Packages::i()->getPath($codename)."install/template_edits.php"))
 				continue;
 
-			require_once JB_PATH."{$codename}/install/template_edits.php";
+			require_once JB_Packages::i()->getPath($codename)."install/template_edits.php";
 	
 			// Run them!
 			if(!empty($edits))
@@ -311,13 +319,14 @@ class JB_Core
 	public function findFile($class = '')
 	{
 		$classParts = explode('_', $class);
-		$jb = array_shift($classParts);
-		if($jb != "JB")
+		$prefix = array_shift($classParts);
+		$vendor = JB_Packages::i()->getVendorForPrefix($prefix);
+    	if($vendor === false)
 			return;
 
 		$package = $classParts[0];
 		$extra = "";
-		if(!is_dir(JB_PATH.$package))
+		if(strtolower($prefix) == "jb" && !is_dir(JB_PATH.$package))
 		{
 			$package = "core";
 		}
@@ -334,9 +343,9 @@ class JB_Core
 
 		$className = array_pop($classParts);
 
-		$path = JB_PATH.$package."/".$extra.implode("/", $classParts)."/".$className.".php";
+		$path = JB_Packages::i()->getPath($package).$extra.implode("/", $classParts)."/".$className.".php";
 
-		if(file_exists($path))
+    	if(file_exists($path))
 			return $path;
 	}
 }

@@ -6,7 +6,7 @@ class JB_Installer_Database extends JB_Installer_Base
 	{
 		global $db;
 
-		require JB_PATH."{$codename}/install/tables.php";
+		require JB_Packages::i()->getPath($codename)."install/tables.php";
 
 		// MyBB's way of creating tables - no need to modify it
 		if(!empty($tables))
@@ -41,7 +41,7 @@ class JB_Installer_Database extends JB_Installer_Base
 	{
 		global $db;
 
-		require JB_PATH."{$codename}/install/tables.php";
+		require JB_Packages::i()->getPath($codename)."install/tables.php";
 
 		// MyBB's way of creating tables - no need to modify it
 		if(!empty($tables))
@@ -78,7 +78,7 @@ class JB_Installer_Database extends JB_Installer_Base
 	{
 		global $db;
 
-		require JB_PATH."{$codename}/install/tables.php";
+		require JB_Packages::i()->getPath($codename)."install/tables.php";
 
 		if(!empty($tables))
 		{
@@ -108,6 +108,6 @@ class JB_Installer_Database extends JB_Installer_Base
 
 	static function isNeeded($codename)
 	{
-		return file_exists(JB_PATH."{$codename}/install/tables.php");
+		return file_exists(JB_Packages::i()->getPath($codename)."install/tables.php");
 	}
 }

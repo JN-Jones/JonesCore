@@ -11,6 +11,7 @@ class JB_Helpers
 		"allow_videocode"	=> 1,
 		"filter_badwords"	=> 1
 	);
+	static private $ugroupcache = array();
 
 	// Cache our parser class and the options
 	public static function parse($message)
@@ -113,10 +114,10 @@ class JB_Helpers
 				return $jb[$codename];
 		}
 
-		if(!file_exists(MYBB_ROOT."inc/plugins/{$codename}.php"))
+		if(!file_exists(JB_PLUGINS."{$codename}.php"))
 			return false;
 
-		require_once MYBB_ROOT."inc/plugins/{$codename}.php";
+		require_once JB_PLUGINS."{$codename}.php";
 
 		$func = $codename."_info";
 		if(!function_exists($func))
@@ -144,5 +145,30 @@ class JB_Helpers
 			return $version."0";
 		else
 			return substr($version, 0, 4);
+	}
+
+	public static function getUsersInGroup($gid)
+	{
+		if(isset(static::$ugroupcache[$gid]))
+			return static::$ugroupcache[$gid];
+
+		global $db;
+		switch($db->type)
+		{
+			case "pgsql":
+			case "sqlite":
+				$query = $db->simple_select("users", "*", "','||additionalgroups||',' LIKE '%,{$gid},%' OR usergroup='{$gid}'", array('order_by' => 'username'));
+				break;
+			default:
+				$query = $db->simple_select("users", "*", "CONCAT(',',additionalgroups,',') LIKE '%,{$gid},%' OR usergroup='{$gid}'", array('order_by' => 'username'));
+		}
+
+		$users = array();
+		while($user = $db->fetch_array($query))
+		{
+			$users[] = $user;
+		}
+		static::$ugroupcache[$gid] = $users;
+		return $users;
 	}
 }

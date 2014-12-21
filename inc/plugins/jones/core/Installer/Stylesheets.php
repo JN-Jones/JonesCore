@@ -6,7 +6,7 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 	{
 		global $db, $mybb;
 
-		require JB_PATH."{$codename}/install/stylesheets.php";
+		require JB_Packages::i()->getPath($codename)."install/stylesheets.php";
 
 		// Settings
 		if(!empty($stylesheets))
@@ -47,7 +47,7 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 	{
 		global $db, $mybb;
 
-		require JB_PATH."{$codename}/install/stylesheets.php";
+		require JB_Packages::i()->getPath($codename)."install/stylesheets.php";
 
 		// Settings
 		if(!empty($stylesheets))
@@ -92,7 +92,7 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 	{
 		global $db, $mybb;
 
-		require JB_PATH."{$codename}/install/stylesheets.php";
+		require JB_Packages::i()->getPath($codename)."install/stylesheets.php";
 
 		// Settings
 		if(!empty($stylesheets))
@@ -129,6 +129,6 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 
 	static function isNeeded($codename)
 	{
-		return file_exists(JB_PATH."{$codename}/install/stylesheets.php");
+		return file_exists(JB_Packages::i()->getPath($codename)."install/stylesheets.php");
 	}
 }
