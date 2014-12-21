@@ -47,7 +47,7 @@ class JB_Installer_Templates extends JB_Installer_Base
 			);
 			$db->insert_query("templategroups", dbe($templategroup));
 		}
-	
+
 		// Templates
 		if(!empty($templates))
 		{
@@ -66,7 +66,7 @@ class JB_Installer_Templates extends JB_Installer_Base
 						'version' => $version,
 						'dateline' => TIME_NOW
 					);
-					$db->update_query("templates", dbe($update_array), "title='".dbe($templatename)."' AND sid='-2'");
+					$db->update_query("templates", dbe($update_array), "title='".dbe($template['title'])."' AND sid='-2'");
 				}
 				else
 				{
