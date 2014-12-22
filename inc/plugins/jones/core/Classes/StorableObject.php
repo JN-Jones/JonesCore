@@ -1,39 +1,17 @@
 <?php
 
-abstract class JB_Classes_Base
+abstract class JB_Classes_StorableObject extends JB_Classes_Object implements JB_Classes_Interfaces_Storable
 {
 	// Cache our objects
 	static protected $cache = array();
-	// The "real" data
-	protected $data = array();
 	// Whether we use timestamps which needs to be touched
 	static protected $timestamps = false;
 	// Whether we need to save the user id or not
 	static protected $user = false;
 	// The table we're operating on
 	static protected $table;
-	// An array of errors which the validation produced
-	protected $errors = array();
 	// Our default sql options
 	static protected $default_options = array();
-
-	// Should return a new object with the $data
-	public static function create($data)
-	{
-		return new static($data);
-	}
-
-	// Save our data
-	public function __construct($data)
-	{
-		// -1 is our "not existant"
-		if(empty($data['id']))
-			$data['id'] = -1;
-
-		static::runHook("construct", $data);
-
-		$this->data = $data;
-	}
 
 	// Get all objects
 	public static function getAll($where='', $options=array())
@@ -82,8 +60,6 @@ abstract class JB_Classes_Base
 
 		return $class;
 	}
-
-	public abstract function validate($hard=true);
 
 	// Saves the current object
 	public function save()
@@ -146,39 +122,4 @@ abstract class JB_Classes_Base
 
 		return $options;
 	}
-
-	// Error functions
-	public function getErrors()
-	{
-		return $this->errors;
-	}
-	public function getInlineErrors()
-	{
-		return inline_error($this->errors);
-	}
-
-	// Magic PHP methods to use our $data array
-	// TODO: possible plugin hooks?
-	public function __get($key)
-	{
-		return $this->data[$key];
-	}
-
-	public function __set($key, $value)
-	{
-		$this->data[$key] = $value;
-	}
-
-	public function __isset($key)
-	{
-		return isset($this->data[$key]);
-	}
-
-	public function __unset($key)
-	{
-		unset($this->data[$key]);
-	}
-
-	// Should be overwritten by those packages which support plugin hooks
-	public function runHook($name, &$arguments="") {}
 }
