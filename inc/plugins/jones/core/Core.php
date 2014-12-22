@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.6";
+	private static $version = "0.7";
 
 	// Singleton
 	private static $instance = null;

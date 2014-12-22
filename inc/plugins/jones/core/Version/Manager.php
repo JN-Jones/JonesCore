@@ -15,7 +15,7 @@ abstract class JB_Version_Manager
 				$version = JB_Helpers::createNiceVersion($version);
 				$updater = JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_Version_V{$version}";
 
-				if(class_exists($updater))
+				if(class_exists($updater) && is_subclass_of($updater, JB_Version_Base))
 					$updater::execute();
 			}
 		}
