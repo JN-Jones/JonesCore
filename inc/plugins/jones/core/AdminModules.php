@@ -9,26 +9,26 @@ class JB_AdminModules
 		global $mybb, $page, $lang, $errors;
 
 		if($codename === false)
-		    $codename = $page->active_action;
+			$codename = $page->active_action;
 
 		if($module === false)
 			$module = $page->active_module;
 
 		if($action === false)
-		    $action = $mybb->get_input('action');
+			$action = $mybb->get_input('action');
 
 		// Empty is index
 		if(empty($action))
-		    $action = "index";
+			$action = "index";
 
 		$path = JB_Packages::i()->getPath($codename)."modules/admin/{$module}/";
 
 		// Unknown module - blank page
 		if(!file_exists($path."{$action}.php"))
-		    return;
+			return;
 
 		if($method != "get" && $method != "post")
-		    $method = $mybb->request_method;
+			$method = $mybb->request_method;
 
 		// Require our nice module classes
 		require_once $path."{$action}.php";
@@ -37,9 +37,12 @@ class JB_AdminModules
 		$classname = "Module_".ucfirst($action);
 		$mc = new $classname($this);
 
+		if(!($mc instanceof JB_Module_Base))
+			die("Module {$classname} is not a subclass of \"JB_Module_Base\"");
+
 		// Let's figure out what to do
 		// Something we need to do for post and get?
-	    $mc->start();
+		$mc->start();
 
 		// If we have a post method and we're posting -> run it
 		if($method == "post" && $mc->post)
@@ -57,10 +60,10 @@ class JB_AdminModules
 		global $plugins, $config;
 
 		if(!defined("IN_ADMINCP"))
-		    return;
+			return;
 
 		if($active === false)
-		    $active = $id;
+			$active = $id;
 
 		static::$menu_cache[$module][$id] = array(
 			"file"		=> $file,
@@ -73,7 +76,7 @@ class JB_AdminModules
 			if(!isset($pluginlist))
 				$pluginlist = $cache->read("plugins");
 			if(!is_array($pluginlist['active']) || !in_array("myplugins", $pluginlist['active']))
-			    $myplugins = false;
+				$myplugins = false;
 		}
 
 		if($myplugins === true)
@@ -95,12 +98,12 @@ class JB_AdminModules
 	{
 		global $page, $lang, $info;
 
-    	foreach(static::$menu_cache as $m => $t)
+		foreach(static::$menu_cache as $m => $t)
 		{
-    		foreach($t as $id => $info)
+			foreach($t as $id => $info)
 			{
 				if(!isset($lang->$id))
-				    $lang->load($id, false, true);
+					$lang->load($id, false, true);
 
 				$actions[$id] = array(
 					"active"	=> $info['active'],
@@ -111,7 +114,7 @@ class JB_AdminModules
 				$sub_menu['10'] = array("id" => $id, "title" => $lang->$id, "link" => "index.php?module=myplugins-{$id}");
 				$sidebar = new SidebarItem($lang->$id);
 				$sidebar->add_menu_items($sub_menu, $actions[$info]['active']);
-		
+
 				$page->sidebar .= $sidebar->get_markup();
 			}
 		}
@@ -125,7 +128,7 @@ class JB_AdminModules
 		preg_match("#admin_([a-z]*)_action_handler#i", $plugins->current_hook, $match);
 		$module = $match[1];
 		if(!isset(static::$menu_cache[$module]))
-		    return;
+			return;
 
 		foreach(static::$menu_cache[$module] as $id => $info)
 		{
@@ -143,13 +146,13 @@ class JB_AdminModules
 
 		preg_match("#admin_([a-z]*)_menu#i", $plugins->current_hook, $match);
 		$module = $match[1];
-   		if(!isset(static::$menu_cache[$module]))
-		    return;
+		if(!isset(static::$menu_cache[$module]))
+			return;
 
 		foreach(static::$menu_cache[$module] as $id => $info)
 		{
 			if(!isset($lang->$id))
-			    $lang->load($id, false, true);
+				$lang->load($id, false, true);
 
 			$sub_menu[] = array("id" => $id, "title" => $lang->$id, "link" => "index.php?module={$module}-{$id}");
 		}
@@ -169,18 +172,18 @@ class JB_AdminModules
 				return;
 		}
 
-    	foreach(static::$menu_cache as $m => $t)
+		foreach(static::$menu_cache as $m => $t)
 		{
 			if($module !== false && $m != $module)
-			    continue;
+				continue;
 
-    		foreach($t as $id => $info)
+			foreach($t as $id => $info)
 			{
 				if(!isset($lang->$id))
-				    $lang->load($id, false, true);
+					$lang->load($id, false, true);
 
 				$l = "{$id}_permission";
-			    $admin_permissions[$id] = $lang->$l;
+				$admin_permissions[$id] = $lang->$l;
 			}
 		}
 	

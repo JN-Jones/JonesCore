@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.6";
+	private static $version = "0.7 dev 1";
 
 	// Singleton
 	private static $instance = null;
@@ -321,7 +321,7 @@ class JB_Core
 		$classParts = explode('_', $class);
 		$prefix = array_shift($classParts);
 		$vendor = JB_Packages::i()->getVendorForPrefix($prefix);
-    	if($vendor === false)
+		if($vendor === false)
 			return;
 
 		$package = $classParts[0];
@@ -345,7 +345,7 @@ class JB_Core
 
 		$path = JB_Packages::i()->getPath($package).$extra.implode("/", $classParts)."/".$className.".php";
 
-    	if(file_exists($path))
+		if(file_exists($path))
 			return $path;
 	}
 }

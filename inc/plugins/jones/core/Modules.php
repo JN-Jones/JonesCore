@@ -12,7 +12,7 @@ class JB_Modules
 			$codename = substr(THIS_SCRIPT, 0, -4);
 
 		if(!is_dir(JB_Packages::i()->getPath($codename)."modules/"))
-		    die($codename." is not modular");
+			die($codename." is not modular");
 
 		$this->codename = $codename;
 		$this->path = JB_Packages::i()->getPath($codename)."modules/";
@@ -33,14 +33,14 @@ class JB_Modules
 
 		// Empty is index
 		if(empty($module))
-		    $module = "index";
+			$module = "index";
 
 		// Unknown module - blank page
 		if(!file_exists($this->path."{$module}.php"))
-		    return;
+			return;
 
 		if($method != "get" && $method != "post")
-		    $method = $mybb->request_method;
+			$method = $mybb->request_method;
 
 		// Require our nice module classes
 		require_once $this->path."{$module}.php";
@@ -49,9 +49,12 @@ class JB_Modules
 		$classname = "Module_".ucfirst($module);
 		$mc = new $classname($this);
 
+		if(!($mc instanceof JB_Module_Base))
+			die("Module {$classname} is not a subclass of \"JB_Module_Base\"");
+
 		// Let's figure out what to do
 		// Something we need to do for post and get?
-	    $mc->start();
+		$mc->start();
 
 		// If we have a post method and we're posting -> run it
 		if($method == "post" && $mc->post)

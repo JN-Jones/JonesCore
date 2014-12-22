@@ -52,7 +52,7 @@ class JB_WIO_Handler
 			else
 				$link = $l;
 
-			$array['location_name'] = $link;          	
+			$array['location_name'] = $link;
 		}
 		
 		return $array;
@@ -78,7 +78,7 @@ class JB_WIO_Handler
 				continue;
 
 			$handler = JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_WIO_Handler";
-			if(class_exists($handler))
+			if(class_exists($handler) && is_subclass_of($handler, JB_WIO_Base))
 			{
 				$handler::init();
 				static::$handlers[$codename] = $handler;
