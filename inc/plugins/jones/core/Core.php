@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "0.7";
+	private static $version = "0.9";
 
 	// Singleton
 	private static $instance = null;
@@ -146,7 +146,7 @@ class JB_Core
 			JB_Installer_Templates::uninstall($codename);
 
 		if(JB_Installer_Stylesheets::isNeeded($codename))
-			JB_Installer_Stylesheets::install($codename);
+			JB_Installer_Stylesheets::uninstall($codename);
 
 		if(JB_Installer_Settings::isNeeded($codename))
 			JB_Installer_Settings::uninstall($codename);
@@ -194,14 +194,11 @@ class JB_Core
 	{
 		global $mybb, $cache;
 
-		// Doesn't really belong here, but better than having another function just for that
-		if($mybb->input['action'] == "jb_version")
+		// Doesn't really belong here, but better than adding a new hook
+		if($mybb->input['action'] == "jb_info")
 		{
-			$jb_plugins = $cache->read('jb_plugins');
-			$plugins = "";
-			foreach($jb_plugins as $codename => $version)
-				$plugins .= "<li>{$codename} {$version}</li>";
-			die("JonesCore ".static::$version." running on MyBB {$mybb->version} with PHP ".PHP_VERSION." and the following plugins:<br /><ul>{$plugins}</ul>");
+			$this->showInfo();
+			return;
 		}
 
 		if($mybb->input['action'] != "jb_update")
@@ -229,6 +226,24 @@ class JB_Core
 			$version_manager::run($from_version);
 		}
 
+		if(JB_Installer_Templates::isNeeded($codename))
+			JB_Installer_Templates::update($codename);
+
+		if(JB_Installer_Stylesheets::isNeeded($codename))
+			JB_Installer_Stylesheets::update($codename);
+
+		if(JB_Installer_Settings::isNeeded($codename))
+			JB_Installer_Settings::update($codename);
+
+		if(JB_Installer_Tasks::isNeeded($codename))
+			JB_Installer_Tasks::update($codename);
+
+		if(JB_Installer_Database::isNeeded($codename))
+			JB_Installer_Database::update($codename);
+
+		if(JB_Installer_Alerts::isNeeded($codename))
+			JB_Installer_Alerts::update($codename);
+
 		require_once JB_PLUGINS."{$codename}.php";
 		$info = $codename."_info";
 		$info = $info();
@@ -237,6 +252,34 @@ class JB_Core
 
 		flash_message(JB_Lang::get("updated_plugin"), 'success');
 		admin_redirect('index.php?module=config-plugins');
+	}
+
+	private function showInfo()
+	{
+		global $cache, $page, $mybb;
+
+		$jb_plugins = $cache->read('jb_plugins');
+		$plugins = "";
+		foreach($jb_plugins as $codename => $version)
+		{
+			$info = "{$codename}_info";
+			$info = $info();
+			$plugins .= "<li>{$info['name']} ({$info['author']}) {$version}</li>";
+		}
+
+		$dev = "";
+		if(defined("USE_DEVELOPMENT") && USE_DEVELOPMENT === true)
+			$dev = " (Development Version)";
+
+		$page->output_header("Jones Core not installed");
+
+		$table = new Table;
+		$table->construct_header("Info");
+		$table->construct_cell("JonesCore ".static::$version."{$dev} running on MyBB {$mybb->version} with PHP ".PHP_VERSION." and the following plugins:<br /><ul>{$plugins}</ul>");
+		$table->construct_row();
+		$table->output("Jones Core Info");
+
+		$page->output_footer();
 	}
 
 	public function checkVersion()

@@ -10,22 +10,26 @@ class JB_Installer_Tasks extends JB_Installer_Base
 
 		if(!empty($tasks))
 		{
+			require_once MYBB_ROOT."inc/functions_task.php";
+
 			$dtask = array(
-				"file"		=> $codename,
-				"minute"	=> "0,30",
-				"hour"		=> "*",
-				"day"		=> "*",
-				"weekday"	=> "*",
-				"month"		=> "*",
-				"enabled"	=> "0", // Should be done on activating
-				"logging"	=> "1",
+				"title"			=> $codename,
+				"file"			=> $codename,
+				"description"	=> "",
+				"minute"		=> "0,30",
+				"hour"			=> "*",
+				"day"			=> "*",
+				"weekday"		=> "*",
+				"month"			=> "*",
+				"enabled"		=> "0", // Should be done on activating
+				"logging"		=> "1",
 			);
 
 			foreach($tasks as $task)
 			{
 				$task = array_merge($dtask, $task);
 				$task['nextrun'] = fetch_next_run($task);
-				$db->insert_query("tasks", dbe($new_task));
+				$db->insert_query("tasks", dbe($task));
 			}
 		}
 	}
@@ -38,6 +42,8 @@ class JB_Installer_Tasks extends JB_Installer_Base
 
 		if(!empty($tasks))
 		{
+			require_once MYBB_ROOT."inc/functions_task.php";
+
 			$dtask = array(
 				"file"		=> $codename,
 				"minute"	=> "0,30",
@@ -57,7 +63,7 @@ class JB_Installer_Tasks extends JB_Installer_Base
 				if($db->num_rows($query) == 0)
 				{
 					$task['nextrun'] = fetch_next_run($task);
-					$db->insert_query("tasks", dbe($new_task));
+					$db->insert_query("tasks", dbe($task));
 				}
 			}
 		}
