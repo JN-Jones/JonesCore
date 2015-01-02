@@ -23,12 +23,17 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 			foreach($stylesheets as $stylesheet)
 			{
 				if(!is_array($stylesheet))
-					$stylesheet['stylesheet'] = $stylesheet;
+				{
+					// Use temp variables - PHP doesn't like the short version
+					$t = $stylesheet;
+					$stylesheet = array();
+					$stylesheet['stylesheet'] = $t;
+				}
 
 				// Needed to cache the stylesheet
 				$orig = $stylesheet['stylesheet'];
 
-				$stylesheet = array_merge($stylesheet, $dstyle);
+				$stylesheet = array_merge($dstyle, $stylesheet);
 
 				if(empty($stylesheet['cachefile']))
 					$stylesheet['cachefile'] = $stylesheet['name'];
@@ -64,9 +69,14 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 			foreach($stylesheets as $stylesheet)
 			{
 				if(!is_array($stylesheet))
-					$stylesheet['stylesheet'] = $stylesheet;
+				{
+					// Use temp variables - PHP doesn't like the short version
+					$t = $stylesheet;
+					$stylesheet = array();
+					$stylesheet['stylesheet'] = $t;
+				}
 
-				$stylesheet = array_merge($stylesheet, $dstyle);
+				$stylesheet = array_merge($dstyle, $stylesheet);
 
 				$query = $db->simple_select("themestylesheets", "name", "name='".dbe($stylesheet['name'])."'");
 				if($db->num_rows($query) == 0)

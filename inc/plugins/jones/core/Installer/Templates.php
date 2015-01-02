@@ -21,7 +21,7 @@ class JB_Installer_Templates extends JB_Installer_Base
 		// Templates
 		if(!empty($templates))
 		{
-			$version = JB_Helpers::createFourDigitVersion(JB_Helpers::getVersion($codename));
+			$version = JB_Helpers::createFourDigitVersion(JB_Helpers::getVersion($codename, false));
 			foreach($templates as $template)
 			{
 				$template['sid'] = "-2"; // Master Theme
@@ -51,7 +51,7 @@ class JB_Installer_Templates extends JB_Installer_Base
 		// Templates
 		if(!empty($templates))
 		{
-			$version = JB_Helpers::createFourDigitVersion(JB_Helpers::getVersion($codename));
+			$version = JB_Helpers::createFourDigitVersion(JB_Helpers::getVersion($codename, false));
 			foreach($templates as $template)
 			{
 				$query = $db->simple_select("templates", "tid", "sid='-2' AND title='".dbe($template['title'])."'");
