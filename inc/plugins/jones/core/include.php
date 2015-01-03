@@ -24,7 +24,10 @@ function jb_install_plugin($codename, $register = array(), $core_minimum = false
 
 	// In case we installed the core and this plugin needs to register itself we need to do this here. Otherwise the installer can't find its files
 	if($installed === true && isset($register['vendor']) && isset($register['prefix']))
+	{
+		JB_Core::i(); // Needed to register the autoloader
 		JB_Packages::i()->register($register['prefix'], $register['vendor'], $codename);
+	}
 
 	// Don't use an else as the function above might change the value
 	if(JB_CORE_INSTALLED === true || $installed === true)
