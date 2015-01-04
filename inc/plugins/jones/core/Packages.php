@@ -67,9 +67,9 @@ class JB_Packages
 	public function getVendorForPrefix($prefix)
 	{
 		if(strtolower($prefix) == "jb")
-			return "Jones";
+			return "jones";
 
-    	foreach($this->vendors as $vendor => $pr)
+		foreach($this->vendors as $vendor => $pr)
 		{
 			if($pr == $prefix)
 				return $vendor;

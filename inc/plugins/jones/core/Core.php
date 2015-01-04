@@ -3,7 +3,7 @@
 class JB_Core
 {
 	// Our version!
-	private static $version = "1.0";
+	private static $version = "1.0.1";
 
 	// Singleton
 	private static $instance = null;
@@ -25,7 +25,7 @@ class JB_Core
 		// Define some path constants
 		define(JB_PLUGINS, MYBB_ROOT."inc/plugins/");
 		define(JB_PATH, JB_PLUGINS."jones/");
-		define(JB_INCLUDES, JB_PATH."core/includes/");
+		define(JB_INCLUDES, JB_PATH."core/Includes/");
 
 		// We need to require our packages manager manually as the autoloader needs it
 		require_once JB_PATH."core/Packages.php";
@@ -364,17 +364,19 @@ class JB_Core
 		$classParts = explode('_', $class);
 		$prefix = array_shift($classParts);
 		$vendor = JB_Packages::i()->getVendorForPrefix($prefix);
-    	if($vendor === false)
+		if($vendor === false)
 			return;
 
 		$package = $classParts[0];
 		$extra = "";
-		if(strtolower($prefix) == "jb" && !is_dir(JB_PATH.$package))
+		if(strtolower($prefix) == "jb" && !is_dir(JB_PATH.strtolower($package)))
 		{
 			$package = "core";
 		}
 		else
 		{
+			$package = strtolower($package);
+
 			array_shift($classParts);
 
 			$el = count($classParts);
@@ -388,7 +390,7 @@ class JB_Core
 
 		$path = JB_Packages::i()->getPath($package).$extra.implode("/", $classParts)."/".$className.".php";
 
-    	if(file_exists($path))
+		if(file_exists($path))
 			return $path;
 	}
 }
