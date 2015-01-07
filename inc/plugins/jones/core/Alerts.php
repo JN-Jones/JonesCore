@@ -217,7 +217,7 @@ class JB_Alerts
 
 		if(!function_exists("myalerts_is_activated"))
 		{
-			static::$activated = false:
+			static::$activated = false;
 			return false;
 		}
 
