@@ -215,6 +215,12 @@ class JB_Alerts
 			return false;
 		}
 
+		if(!function_exists("myalerts_is_activated"))
+		{
+			static::$activated = false;
+			return false;
+		}
+
 		static::$activated = myalerts_is_activated();
 
 		return static::$activated;
