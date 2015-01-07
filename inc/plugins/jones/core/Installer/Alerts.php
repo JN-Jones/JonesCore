@@ -16,7 +16,8 @@ class JB_Installer_Alerts extends JB_Installer_Base
 			foreach($alerts as $alert)
 			{
 				// Don't enable it - will be done on activation
-				$alertType = (new MybbStuff_MyAlerts_Entity_AlertType())->setCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}")->setEnabled(false);
+				$alertType = new MybbStuff_MyAlerts_Entity_AlertType();
+				$alertType = $alertType->setCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}")->setEnabled(false);
 				$manager->add($alertType);
 			}
 		}
@@ -40,7 +41,8 @@ class JB_Installer_Alerts extends JB_Installer_Base
 				$test = $manager->getByCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}");
 				if($test === null)
 				{
-					$alertType = (new MybbStuff_MyAlerts_Entity_AlertType())->setCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}")->setEnabled($activated);
+					$alertType = new MybbStuff_MyAlerts_Entity_AlertType();
+					$alertType = $alertType->setCode(JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_{$alert}")->setEnabled($activated);
 					$manager->add($alertType);
 				}
 			}
