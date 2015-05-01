@@ -2,8 +2,17 @@
 
 class JB_Alerts
 {
+	/**
+	 * @var bool
+	 */
 	private static $installed = null;
+	/**
+	 * @var bool
+	 */
 	private static $activated = null;
+	/**
+	 * @var array
+	 */
 	private static $types = null;
 
 	public static function init()
@@ -55,7 +64,14 @@ class JB_Alerts
 		}
 	}
 
-	public static function trigger($codename, $alert, $to, $extra=array(), $from=false)
+	/**
+	 * @param string    $codename
+	 * @param string    $alert
+	 * @param array|int $to
+	 * @param array     $extra
+	 * @param array|int $from
+	 */
+	public static function trigger($codename, $alert, $to, array $extra=array(), $from=false)
 	{
 		// Nothing to do if MyAlerts is deactivated
 		if(!static::isActivated())
@@ -88,7 +104,14 @@ class JB_Alerts
 		}
 	}
 
-	public static function triggerGroup($codename, $alert, $to, $extra=array(), $from=false)
+	/**
+	 * @param string    $codename
+	 * @param string    $alert
+	 * @param array|int $to
+	 * @param array     $extra
+	 * @param array|int $from
+	 */
+	public static function triggerGroup($codename, $alert, $to, array $extra=array(), $from=false)
 	{
 		// Nothing to do if MyAlerts is deactivated
 		if(!static::isActivated())
@@ -110,6 +133,9 @@ class JB_Alerts
 		static::trigger($codename, $alert, $users, $extra, $from);
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function getTypes()
 	{
 		if(static::$types !== null)
@@ -170,6 +196,9 @@ class JB_Alerts
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	public static function isInstalled()
 	{
 		if(static::$installed !== null)
@@ -203,6 +232,9 @@ class JB_Alerts
 		return static::$installed;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public static function isActivated()
 	{
 		if(static::$activated !== null)

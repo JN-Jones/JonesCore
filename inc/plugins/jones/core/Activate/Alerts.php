@@ -2,6 +2,9 @@
 
 class JB_Activate_Alerts extends JB_Activate_Base
 {
+	/**
+	 * {@inheritdoc}
+	 */
 	static function activate($codename)
 	{
 		global $db, $cache;
@@ -23,6 +26,9 @@ class JB_Activate_Alerts extends JB_Activate_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function deactivate($codename)
 	{
 		global $db, $cache;
@@ -44,6 +50,9 @@ class JB_Activate_Alerts extends JB_Activate_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function isNeeded($codename)
 	{
 		// Only needed when MyAlerts is installed

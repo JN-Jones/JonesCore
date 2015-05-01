@@ -2,9 +2,12 @@
 
 abstract class JB_Classes_ExportableObject extends JB_Classes_StorableObject implements JB_Classes_Interfaces_Exportable
 {
-	// Export multiple objects
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function exportMultiple($where='')
 	{
+		/** @var static[] $classes */
 		$classes = static::getAll($where);
 		$xml = "<objects>\r\n";
 
@@ -18,7 +21,9 @@ abstract class JB_Classes_ExportableObject extends JB_Classes_StorableObject imp
 		return $xml;
 	}
 
-	// Export this object
+	/**
+	 * {@inheritdoc}
+	 */
 	public function export()
 	{
 		$class = strtolower(get_called_class());
@@ -36,13 +41,16 @@ abstract class JB_Classes_ExportableObject extends JB_Classes_StorableObject imp
 		return $xml;
 	}
 
-	// Import multiple objects
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function importMultiple($data)
 	{
 		$class = strtolower(get_called_class());
 		$data = simplexml_load_string($data);
 		$classes = array();
 
+		/** @var SimpleXMLElement $obj */
 		foreach($data as $obj)
 		{
 			if((string)$obj['class'] != $class)
@@ -56,7 +64,9 @@ abstract class JB_Classes_ExportableObject extends JB_Classes_StorableObject imp
 		return $classes;
 	}
 
-	// Import one object
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function import($data)
 	{
 		$class = strtolower(get_called_class());

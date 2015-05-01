@@ -2,7 +2,14 @@
 
 class JB_Helpers
 {
+	/**
+	 * @var postParser
+	 */
 	static private $parser = null;
+
+	/**
+	 * @var array
+	 */
 	static private $parser_options = array(
 		"allow_html"		=> 0,
 		"allow_mycode"		=> 1,
@@ -11,9 +18,19 @@ class JB_Helpers
 		"allow_videocode"	=> 1,
 		"filter_badwords"	=> 1
 	);
+
+	/**
+	 * @var array
+	 */
 	static private $ugroupcache = array();
 
-	// Cache our parser class and the options
+	/**
+	 * Cache our parser class and the options
+	 *
+	 * @param string $message
+	 *
+	 * @return string
+	 */
 	public static function parse($message)
 	{
 		if(static::$parser == null)
@@ -25,13 +42,28 @@ class JB_Helpers
 		return static::$parser->parse_message($message, static::$parser_options);
 	}
 
-	// Shorten the line a bit
+	/**
+	 * Shorten the line a bit
+	 *
+	 * @param int $date
+	 *
+	 * @return string
+	 */
 	public static function formatDate($date)
 	{
 		return my_date('relative', $date);
 	}
 
-	// Helper to create a preview
+	/**
+	 * Helper to create a preview
+	 *
+	 * @param string $message
+	 * @param int    $length
+	 * @param string $append
+	 * @param bool   $parse
+	 *
+	 * @return string
+	 */
 	public static function preview($message, $length = 100, $append = "...", $parse = true)
 	{
 		// Do we still need to parse our message?
@@ -46,7 +78,15 @@ class JB_Helpers
 		return my_substr($message, 0, $length-strlen($append)).$append;
 	}
 
-	// Create a simple text with (avatar) Username
+	/**
+	 * Create a simple text with (avatar) Username
+	 *
+	 * @param array|int $user
+	 * @param bool      $avatar
+	 * @param bool      $formatName
+	 *
+	 * @return string
+	 */
 	public static function formatUser($user, $avatar = true, $formatName = false)
 	{
 		global $lang;
@@ -69,6 +109,11 @@ class JB_Helpers
 		return build_profile_link($name, $user['uid']);
 	}
 
+	/**
+	 * @param int|string $string
+	 *
+	 * @return int|string
+	 */
 	public static function escapeOutput($string)
 	{
 		if(is_numeric($string))
@@ -76,6 +121,11 @@ class JB_Helpers
 		return htmlspecialchars_uni($string);
 	}
 
+	/**
+	 * @param int|string|array $string
+	 *
+	 * @return int|string
+	 */
 	public static function escapeDatabase($string)
 	{
 		global $db;
@@ -87,10 +137,13 @@ class JB_Helpers
 		return $db->escape_string($string);
 	}
 
-	public static function escapeDatabaseArray($array)
+	/**
+	 * @param array $array
+	 *
+	 * @return array
+	 */
+	public static function escapeDatabaseArray(array $array)
 	{
-		global $db;
-
 		foreach($array as &$el)
 		{
 			if(is_array($el))
@@ -102,6 +155,12 @@ class JB_Helpers
 		return $array;
 	}
 
+	/**
+	 * @param string $codename
+	 * @param bool   $doCache
+	 *
+	 * @return bool|string
+	 */
 	public static function getVersion($codename, $doCache=true)
 	{
 		// First look whether the version is in our cache
@@ -129,11 +188,21 @@ class JB_Helpers
 		return $info['version'];
 	}
 
+	/**
+	 * @param string $version
+	 *
+	 * @return string
+	 */
 	public static function createNiceVersion($version)
 	{
 		return str_replace(array(".", " ", "_"), "", $version);
 	}
 
+	/**
+	 * @param string $version
+	 *
+	 * @return string
+	 */
 	public static function createFourDigitVersion($version)
 	{
 		$version = static::createNiceVersion($version);
@@ -147,6 +216,11 @@ class JB_Helpers
 			return substr($version, 0, 4);
 	}
 
+	/**
+	 * @param int $gid
+	 *
+	 * @return array
+	 */
 	public static function getUsersInGroup($gid)
 	{
 		if(isset(static::$ugroupcache[$gid]))

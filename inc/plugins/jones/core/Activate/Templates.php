@@ -2,10 +2,11 @@
 
 class JB_Activate_Templates extends JB_Activate_Base
 {
+	/**
+	 * {@inheritdoc}
+	 */
 	static function activate($codename)
 	{
-		global $db;
-
 		require JB_Packages::i()->getPath($codename)."install/template_edits.php";
 
 		// Template Edits
@@ -23,10 +24,11 @@ class JB_Activate_Templates extends JB_Activate_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function deactivate($codename)
 	{
-		global $db;
-
 		require JB_Packages::i()->getPath($codename)."install/template_edits.php";
 
 		// Template Edits
@@ -44,6 +46,9 @@ class JB_Activate_Templates extends JB_Activate_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function isNeeded($codename)
 	{
 		return file_exists(JB_Packages::i()->getPath($codename)."install/template_edits.php");

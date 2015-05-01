@@ -2,6 +2,9 @@
 
 class JB_Activate_Tasks extends JB_Activate_Base
 {
+	/**
+	 * {@inheritdoc}
+	 */
 	static function activate($codename)
 	{
 		global $db;
@@ -26,6 +29,9 @@ class JB_Activate_Tasks extends JB_Activate_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function deactivate($codename)
 	{
 		global $db;
@@ -50,6 +56,9 @@ class JB_Activate_Tasks extends JB_Activate_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function isNeeded($codename)
 	{
 		return file_exists(JB_Packages::i()->getPath($codename)."install/tasks.php");

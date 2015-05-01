@@ -2,11 +2,21 @@
 
 class JB_Core
 {
-	// Our version!
-	private static $version = "1.0.2";
+	/**
+	 * Our version!
+	 *
+	 * @var string
+	 */
+	private static $version = "1.0.3";
 
-	// Singleton
+	/**
+	 * @var JB_Core
+	 */
 	private static $instance = null;
+
+	/**
+	 * @return JB_Core
+	 */
 	public static function getInstance()
 	{
 		if(static::$instance === null)
@@ -14,7 +24,12 @@ class JB_Core
 
 		return static::$instance;
 	}
-	// Short it a bit
+
+	/**
+	 * Short for "getInstance"
+	 *
+	 * @return JB_Core
+	 */
 	public static function i()
 	{
 		return static::getInstance();
@@ -23,9 +38,9 @@ class JB_Core
 	private function __construct()
 	{
 		// Define some path constants
-		define(JB_PLUGINS, MYBB_ROOT."inc/plugins/");
-		define(JB_PATH, JB_PLUGINS."jones/");
-		define(JB_INCLUDES, JB_PATH."core/Includes/");
+		define('JB_PLUGINS', MYBB_ROOT."inc/plugins/");
+		define('JB_PATH', JB_PLUGINS."jones/");
+		define('JB_INCLUDES', JB_PATH."core/Includes/");
 
 		// We need to require our packages manager manually as the autoloader needs it
 		require_once JB_PATH."core/Packages.php";
@@ -51,7 +66,13 @@ class JB_Core
 		$plugins->add_hook("build_friendly_wol_location_end", array("JB_WIO_Handler", "buildLink"));
 	}
 
-	public function getInfo($info, $overwrite=true)
+	/**
+	 * @param array $info
+	 * @param bool  $overwrite
+	 *
+	 * @return array
+	 */
+	public function getInfo(array $info, $overwrite=true)
 	{
 		global $cache;
 
@@ -79,6 +100,12 @@ class JB_Core
 		return $info;
 	}
 
+	/**
+	 * @param string $codename
+	 * @param int    $core_minimum
+	 * @param int    $mybb_minimum
+	 * @param string $php_minimum
+	 */
 	public function install($codename, $core_minimum = false, $mybb_minimum = false, $php_minimum = "5.3")
 	{
 		global $cache, $mybb;
@@ -107,7 +134,7 @@ class JB_Core
 		{
 			// PHP is too old
 			flash_message(JB_Lang::get("requirement_php"), 'error');
-			admin_redirect('index.php?module=config-plugins');			
+			admin_redirect('index.php?module=config-plugins');
 		}
 
 		// Test what's needed and run it then
@@ -137,6 +164,9 @@ class JB_Core
 		$cache->update('jb_plugins', $jb_plugins);
 	}
 
+	/**
+	 * @param string $codename
+	 */
 	public function uninstall($codename)
 	{
 		global $cache;
@@ -166,6 +196,9 @@ class JB_Core
 		$cache->update('jb_plugins', $jb_plugins);
 	}
 
+	/**
+	 * @param string $codename
+	 */
 	public function activate($codename)
 	{
 		if(JB_Activate_Templates::isNeeded($codename))
@@ -178,6 +211,9 @@ class JB_Core
 			JB_Activate_Alerts::activate($codename);
 	}
 
+	/**
+	 * @param string $codename
+	 */
 	public function deactivate($codename)
 	{
 		if(JB_Activate_Templates::isNeeded($codename))
@@ -222,6 +258,7 @@ class JB_Core
 
 		if(is_dir($version_dir))
 		{
+			/** @var JB_Version_Manager $version_manager */
 			$version_manager = JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_Version_Manager";
 			$version_manager::run($from_version);
 		}
@@ -341,12 +378,23 @@ class JB_Core
 		}
 	}
 
+	/**
+	 * @param string $url
+	 *
+	 * @return string
+	 */
 	public function call($url)
 	{
 		return fetch_remote_file("http://jonesboard.de{$url}");
 	}
 
 	// Autoloader functions
+
+	/**
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
 	public function loadClass($name = '')
 	{
 		$name = (string) $name;
@@ -358,14 +406,19 @@ class JB_Core
 		
 		return false;
 	}
-	
+
+	/**
+	 * @param string $class
+	 *
+	 * @return bool|string
+	 */
 	public function findFile($class = '')
 	{
 		$classParts = explode('_', $class);
 		$prefix = array_shift($classParts);
 		$vendor = JB_Packages::i()->getVendorForPrefix($prefix);
 		if($vendor === false)
-			return;
+			return false;
 
 		$package = $classParts[0];
 		$extra = "";
@@ -392,5 +445,7 @@ class JB_Core
 
 		if(file_exists($path))
 			return $path;
+
+		return false;
 	}
 }

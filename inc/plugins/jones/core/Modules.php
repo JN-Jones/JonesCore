@@ -2,10 +2,23 @@
 
 class JB_Modules
 {
+	/**
+	 * @var string
+	 */
 	private $codename;
+	/**
+	 * @var string
+	 */
 	private $path;
+	/**
+	 * @var string
+	 */
 	private $template;
 
+	/**
+	 * @param string $codename
+	 * @param string $template
+	 */
 	public function __construct($codename=false, $template=false)
 	{
 		if($codename === false)
@@ -23,7 +36,12 @@ class JB_Modules
 		return $this;
 	}
 
-	// Loads and runs our module
+	/**
+	 * Loads and runs modules
+	 *
+	 * @param string $module
+	 * @param string $method
+	 */
 	public function loadModule($module=false, $method="")
 	{
 		global $mybb, $templates, $lang, $headerinclude, $header, $errors, $write, $footer, $colspan, $masterlink, $theme;

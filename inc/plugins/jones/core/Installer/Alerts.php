@@ -2,6 +2,9 @@
 
 class JB_Installer_Alerts extends JB_Installer_Base
 {
+	/**
+	 * {@inheritdoc}
+	 */
 	static function install($codename)
 	{
 		global $db, $cache;
@@ -23,6 +26,9 @@ class JB_Installer_Alerts extends JB_Installer_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function update($codename)
 	{
 		require JB_Packages::i()->getPath($codename)."install/alerts.php";
@@ -49,6 +55,9 @@ class JB_Installer_Alerts extends JB_Installer_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function uninstall($codename)
 	{
 		global $db, $cache;
@@ -67,6 +76,9 @@ class JB_Installer_Alerts extends JB_Installer_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function isNeeded($codename)
 	{
 		// Only needed when MyAlerts is installed
