@@ -1,5 +1,10 @@
 <?php
 
+if(version_compare(PHP_VERSION, "5.3.0", "<"))
+{
+	die("At least PHP 5.3.0 is required. Please contact your host");
+}
+
 // Whether or not to use the development version
 define("USE_DEVELOPMENT", true);
 
