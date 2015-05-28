@@ -2,6 +2,12 @@
 
 class JB_Alerts_BaseFormatter extends MybbStuff_MyAlerts_Formatter_AbstractFormatter
 {
+	/**
+	 * @param MybbStuff_MyAlerts_Entity_Alert $alert
+	 * @param array                           $outputAlert
+	 *
+	 * @return string
+	 */
 	public function formatAlert(MybbStuff_MyAlerts_Entity_Alert $alert, array $outputAlert)
 	{
 		$code = $alert->getType()->getCode();
@@ -39,6 +45,11 @@ class JB_Alerts_BaseFormatter extends MybbStuff_MyAlerts_Formatter_AbstractForma
 
 	public function init() {}
 
+	/**
+	 * @param MybbStuff_MyAlerts_Entity_Alert $alert
+	 *
+	 * @return string
+	 */
 	public function buildShowLink(MybbStuff_MyAlerts_Entity_Alert $alert)
 	{
 		$extra = $alert->getExtraDetails();

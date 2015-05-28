@@ -2,19 +2,45 @@
 
 abstract class JB_Classes_StorableObject extends JB_Classes_Object implements JB_Classes_Interfaces_Storable
 {
-	// Cache our objects
+	/**
+	 * Cache our objects
+	 *
+	 * @var array
+	 */
 	static protected $cache = array();
-	// Whether we use timestamps which needs to be touched
+
+	/**
+	 * Whether we use timestamps which needs to be touched
+	 *
+	 * @var bool
+	 */
 	static protected $timestamps = false;
-	// Whether we need to save the user id or not
+
+	/**
+	 * Whether we need to save the user id or not
+	 *
+	 * @var bool
+	 */
 	static protected $user = false;
-	// The table we're operating on
+
+	/**
+	 * The table we're operating on
+	 *
+	 * @var string
+	 */
 	static protected $table;
-	// Our default sql options
+
+	/**
+	 * Our default sql options
+	 *
+	 * @var array
+	 */
 	static protected $default_options = array();
 
-	// Get all objects
-	public static function getAll($where='', $options=array())
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function getAll($where='', array $options=array())
 	{
 		global $db;
 
@@ -32,12 +58,17 @@ abstract class JB_Classes_StorableObject extends JB_Classes_Object implements JB
 		return $entries;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getNumber($where='')
 	{
 		return count(static::getAll($where));
 	}
 
-	// Get's the object with that ID
+	/**
+	 * {@inheritdoc}
+	 */
 	public static function getByID($id)
 	{
 		global $db;
@@ -61,7 +92,9 @@ abstract class JB_Classes_StorableObject extends JB_Classes_Object implements JB
 		return $class;
 	}
 
-	// Saves the current object
+	/**
+	 * {@inheritdoc}
+	 */
 	public function save()
 	{
 		global $db, $mybb;
@@ -92,7 +125,9 @@ abstract class JB_Classes_StorableObject extends JB_Classes_Object implements JB
 		return true;
 	}
 
-	// Delete the current object
+	/**
+	 * {@inheritdoc}
+	 */
 	public function delete()
 	{
 		global $db;
@@ -105,7 +140,11 @@ abstract class JB_Classes_StorableObject extends JB_Classes_Object implements JB
 		$db->delete_query(static::$table, "id='{$id}'");
 	}
 
-	// Get the default SQL options
+	/**
+	 * Get the default SQL options
+	 *
+	 * @return array
+	 */
 	private function getDefaultOptions()
 	{
 		$order_dir = "desc";

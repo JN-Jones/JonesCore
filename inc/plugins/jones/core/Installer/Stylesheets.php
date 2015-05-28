@@ -2,6 +2,9 @@
 
 class JB_Installer_Stylesheets extends JB_Installer_Base
 {
+	/**
+	 * {@inheritdoc}
+	 */
 	static function install($codename)
 	{
 		global $db, $mybb;
@@ -48,6 +51,9 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function update($codename)
 	{
 		global $db, $mybb;
@@ -98,6 +104,9 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function uninstall($codename)
 	{
 		global $db, $mybb;
@@ -137,6 +146,9 @@ class JB_Installer_Stylesheets extends JB_Installer_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function isNeeded($codename)
 	{
 		return file_exists(JB_Packages::i()->getPath($codename)."install/stylesheets.php");

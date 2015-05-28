@@ -2,6 +2,9 @@
 
 class JB_Installer_Tasks extends JB_Installer_Base
 {
+	/**
+	 * {@inheritdoc}
+	 */
 	static function install($codename)
 	{
 		global $db;
@@ -34,6 +37,9 @@ class JB_Installer_Tasks extends JB_Installer_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function update($codename)
 	{
 		global $db;
@@ -69,6 +75,9 @@ class JB_Installer_Tasks extends JB_Installer_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function uninstall($codename)
 	{
 		global $db;
@@ -87,6 +96,9 @@ class JB_Installer_Tasks extends JB_Installer_Base
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function isNeeded($codename)
 	{
 		return file_exists(JB_Packages::i()->getPath($codename)."install/tasks.php");

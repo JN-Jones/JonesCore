@@ -2,8 +2,16 @@
 
 class JB_Lang
 {
+	/**
+	 * @var array
+	 */
 	private static $jlang = null;
 
+	/**
+	 * @param string $name
+	 *
+	 * @return string
+	 */
 	public static function get($name)
 	{
 		global $lang;

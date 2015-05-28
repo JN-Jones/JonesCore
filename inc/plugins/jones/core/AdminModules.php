@@ -2,8 +2,17 @@
 
 class JB_AdminModules
 {
+	/**
+	 * @var array
+	 */
 	private static $menu_cache = array();
 
+	/**
+	 * @param string $codename
+	 * @param string $module
+	 * @param string $action
+	 * @param string $method
+	 */
 	public static function loadModule($codename=false, $module=false, $action=false, $method="")
 	{
 		global $mybb, $page, $lang, $errors;
@@ -35,7 +44,7 @@ class JB_AdminModules
 
 		// And activate them
 		$classname = "Module_".ucfirst($action);
-		$mc = new $classname($this);
+		$mc = new $classname();
 
 		if(!($mc instanceof JB_Module_Base))
 			die("Module {$classname} is not a subclass of \"JB_Module_Base\"");
@@ -55,6 +64,15 @@ class JB_AdminModules
 		$mc->finish();
 	}
 
+	/**
+	 * @param string $module
+	 * @param string $id
+	 * @param string $file
+	 * @param bool   $permissions
+	 * @param bool   $myplugins
+	 * @param string $active
+	 * @param bool   $withMenu
+	 */
 	public static function addModule($module, $id, $file, $permissions=true, $myplugins=true, $active=false, $withMenu=true)
 	{
 		global $plugins, $config;
@@ -94,7 +112,13 @@ class JB_AdminModules
 				$plugins->add_hook("admin_{$module}_permissions", array("JB_AdminModules", "permissions"));
 		}
 	}
-	public static function myplugins_actions($actions)
+
+	/**
+	 * @param array $actions
+	 *
+	 * @return array mixed
+	 */
+	public static function myplugins_actions(array $actions)
 	{
 		global $page, $lang, $info;
 
@@ -121,14 +145,20 @@ class JB_AdminModules
 
 		return $actions;
 	}
-	public static function actions($actions)
+
+	/**
+	 * @param array $actions
+	 *
+	 * @return array
+	 */
+	public static function actions(array $actions)
 	{
 		global $plugins, $lang;
 
 		preg_match("#admin_([a-z]*)_action_handler#i", $plugins->current_hook, $match);
 		$module = $match[1];
 		if(!isset(static::$menu_cache[$module]))
-			return;
+			return $actions;
 
 		foreach(static::$menu_cache[$module] as $id => $info)
 		{
@@ -140,14 +170,20 @@ class JB_AdminModules
 
 		return $actions;
 	}
-	public static function menu($sub_menu)
+
+	/**
+	 * @param array $sub_menu
+	 *
+	 * @return array
+	 */
+	public static function menu(array $sub_menu)
 	{
 		global $plugins, $lang;
 
 		preg_match("#admin_([a-z]*)_menu#i", $plugins->current_hook, $match);
 		$module = $match[1];
 		if(!isset(static::$menu_cache[$module]))
-			return;
+			return $sub_menu;
 
 		foreach(static::$menu_cache[$module] as $id => $info)
 		{
@@ -159,17 +195,23 @@ class JB_AdminModules
 
 		return $sub_menu;
 	}
-	public static function permissions($admin_permissions)
+
+	/**
+	 * @param array $admin_permissions
+	 *
+	 * @return array
+	 */
+	public static function permissions(array $admin_permissions)
 	{
 		global $plugins, $lang;
 
-		$module === false;
+		$module = false;
 		if($plugins->current_hook != "myplugins_permission")
 		{
 			preg_match("#admin_([a-z]*)_permissions#i", $plugins->current_hook, $match);
 			$module = $match[1];
 			if(!isset(static::$menu_cache[$module]))
-				return;
+				return $admin_permissions;
 		}
 
 		foreach(static::$menu_cache as $m => $t)

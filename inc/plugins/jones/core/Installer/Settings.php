@@ -2,9 +2,12 @@
 
 class JB_Installer_Settings extends JB_Installer_Base
 {
+	/**
+	 * {@inheritdoc}
+	 */
 	static function install($codename)
 	{
-		global $db, $lang;
+		global $db;
 
 		require JB_Packages::i()->getPath($codename)."install/settings.php";
 
@@ -45,6 +48,9 @@ class JB_Installer_Settings extends JB_Installer_Base
 		rebuild_settings();
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function update($codename)
 	{
 		global $db;
@@ -98,6 +104,9 @@ class JB_Installer_Settings extends JB_Installer_Base
 		rebuild_settings();
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function uninstall($codename)
 	{
 		global $db;
@@ -128,6 +137,9 @@ class JB_Installer_Settings extends JB_Installer_Base
 		rebuild_settings();
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	static function isNeeded($codename)
 	{
 		return file_exists(JB_Packages::i()->getPath($codename)."install/settings.php");

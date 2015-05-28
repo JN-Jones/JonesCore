@@ -2,9 +2,17 @@
 
 class JB_WIO_Handler
 {
+	/**
+	 * @var array
+	 */
 	private static $handlers = null;
 
-	public static function buildArray($user_activity)
+	/**
+	 * @param array $user_activity
+	 *
+	 * @return array
+	 */
+	public static function buildArray(array $user_activity)
 	{
 		global $parameters, $user;
 		$split_loc = explode(".php", $user_activity['location']);
@@ -27,7 +35,12 @@ class JB_WIO_Handler
 		return $user_activity;
 	}
 
-	public static function buildLink($array)
+	/**
+	 * @param array $array
+	 *
+	 * @return array
+	 */
+	public static function buildLink(array $array)
 	{
 		global $lang;
 
@@ -58,6 +71,9 @@ class JB_WIO_Handler
 		return $array;
 	}
 
+	/**
+	 * @return JB_WIO_Base[]
+	 */
 	private static function getHandlers()
 	{
 		if(static::$handlers !== null)
@@ -77,8 +93,9 @@ class JB_WIO_Handler
 			if(!in_array($codename, $active))
 				continue;
 
+			/** @var JB_WIO_Base $handler */
 			$handler = JB_Packages::i()->getPrefixForCodename($codename)."_{$codename}_WIO_Handler";
-			if(class_exists($handler) && is_subclass_of($handler, JB_WIO_Base))
+			if(class_exists($handler) && is_subclass_of($handler, 'JB_WIO_Base'))
 			{
 				$handler::init();
 				static::$handlers[$codename] = $handler;
