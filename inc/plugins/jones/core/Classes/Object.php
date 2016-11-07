@@ -111,7 +111,9 @@ abstract class JB_Classes_Object
 	 * Should be overwritten by those packages which support plugin hooks
 	 *
 	 * @param string $name
-	 * @param array  $arguments
+	 * @param mixed  $arguments
+	 *
+	 * @return mixed
 	 */
-	public function runHook($name, array &$arguments=array()) {}
+	public function runHook($name, &$arguments="") {}
 }

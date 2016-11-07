@@ -7,7 +7,7 @@ class JB_Core
 	 *
 	 * @var string
 	 */
-	private static $version = "1.0.3";
+	private static $version = "1.0.4";
 
 	/**
 	 * @var JB_Core
