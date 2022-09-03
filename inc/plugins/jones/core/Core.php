@@ -7,7 +7,7 @@ class JB_Core
 	 *
 	 * @var string
 	 */
-	private static $version = "1.0.4";
+	private static $version = "1.0.5";
 
 	/**
 	 * @var JB_Core
@@ -86,13 +86,16 @@ class JB_Core
 			$info['description'] .= "<br /><b>".JB_Lang::get('update_plugin')."</b> <a href=\"index.php?module=config-plugins&action=jb_update&plugin={$info['codename']}\">".JB_Lang::get('run')."</a>";
 		}
 
+		// Deprecated warning for all plugins / core
+		$info['description'] .= "<br /><br /><b>Note: This plugin is not maintained anymore and shouldn't be used!!</b>";
+
 		if($overwrite === true)
 		{
 			// Insert some usefull information, eg overwrite author/website to make sure they're the same and display update notifications
 			$generalInfo = array(
-				"website"		=> "http://jonesboard.de/",
+				"website"		=> "http://jonesblog.de/",
 				"author"		=> "Jones",
-				"authorsite"	=> "http://jonesboard.de/",
+				"authorsite"	=> "http://jonesblog.de/",
 			);
 
 			return array_merge($info, $generalInfo);
@@ -321,7 +324,8 @@ class JB_Core
 
 	public function checkVersion()
 	{
-		$l = "/version.php?type=core";
+		// Disabled version check as not maintained anymore
+		/*$l = "/version.php?type=core";
 		if(defined("USE_DEVELOPMENT") && USE_DEVELOPMENT === true)
 			$l .= "&dev=1";
 		$version = $this->call($l);
@@ -330,7 +334,7 @@ class JB_Core
 		{
 			// Update baby!
 			echo "<div class=\"alert\">".JB_Lang::get("update_core")." <a href=\"index.php?module=config-plugins&action=jb_update&plugin=core\">".JB_Lang::get("run")."</a></div>";
-		}
+		}*/
 	}
 
 	public function updateTheme()
@@ -385,7 +389,8 @@ class JB_Core
 	 */
 	public function call($url)
 	{
-		return fetch_remote_file("http://jonesboard.de{$url}");
+		// Disabled as not maintained anymore
+		return "";
 	}
 
 	// Autoloader functions
